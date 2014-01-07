@@ -1,0 +1,130 @@
+'\"
+'\" Copyright (c) 1996-1999 Christian Werner
+'\"
+'\" See the file "license.terms" for information on usage and redistribution
+'\" of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+'\" 
+.so man.macros
+.TH entryx n 8.0 Ck "Ck Built-In Commands"
+.BS
+'\" Note:  do not modify the .SH NAME line immediately below!
+.SH NAME
+entryx \- Create extended entry widgets
+.SH SYNOPSIS
+\fBentryx \fIpathName ?options?\fR
+.BE
+
+.SH DESCRIPTION
+.PP
+This procedure is part of the Ck script library. It is a slightly extended
+version of the Tcl \fBentry\fR command which provides the following
+additional command line options:
+.TP
+\fB\-default \fIvalue\fR
+Default value for \fBinteger\fR, \fBunsigned\fR, and \fBfloat\fR modes,
+which is stored in entry widget on FocusOut, if the value in the widget
+is not a legal number. Defaults to an empty string.
+.TP
+\fB\-fieldwidth \fInumber\fR
+Limits the string in the entry widget to at most \fInumber\fR characters.
+Defaults to some ten thousand characters.
+.TP
+\fB\-initial \fIvalue\fR
+Initial value for the entry's string. If this option is omitted, no
+initial value is set.
+.TP
+\fB\-mode \fImodeName\fR
+Determines the additional bindings for input checking which will be
+bound to the entry widget. \fIModeName\fR must be one of \fBinteger\fR
+(for integer numbers including optional sign), \fBunsigned\fR (for
+integer numbers without sign), \fBfloat\fR (for
+floating point numbers including optional sign and fractional part,
+but without exponent part), \fBnormal\fR (for entries without input
+checking at all), \fBregexp\fR (for checking the entry's string
+against a regular expression), and \fBboolean\fR (for boolean values,
+e.g. 0 or 1, Y or N and so on).
+If the \fB\-mode\fR option is omitted, \fBnormal\fR is chosen as default.
+.TP
+\fB\-offvalue \fIchar\fR
+For mode \fBboolean\fR entry widgets only: \fIchar\fR is used for the
+``false'' state of the entry. \fIChar\fR defaults to ``0''. It is always
+converted to upper case.
+.TP
+\fB\-onvalue \fIchar\fR
+For mode \fBboolean\fR entry widgets only: \fIchar\fR is used for the
+``true'' state of the entry. \fIChar\fR defaults to ``1''. It is always
+converted to upper case.
+.TP
+\fB\-regexp \fIregExp\fR
+For all modes this is the regular expression which provides input filtering.
+This option is ignored for \fBboolean\fR mode.
+.TP
+\fB\-touchvariable \fIvarName\fR
+The global variable \fIvarName\fR is set to 1 whenever the user
+changes the entry's string. The user may reset this variable to 0
+at any time.
+.PP
+These options must be given at creation time of the entry. They cannot
+be modified later using the \fBconfigure\fR widget command.
+.PP
+After creating the entry widget, \fBentryx\fR binds procedures to
+do input checking using the \fBbindtags\fR mechanism to the entry widget.
+These procedures provide for overtype rather than insert mode and give
+the following behaviour:
+.IP [1]
+If mouse button 1 is pressed on the entry and the entry accepts the input
+focus, the input focus is set on the entry and the entry's insertion cursor
+is placed on the very first character.
+.IP [2]
+The Left and Right keys move the insertion cursor one character to the
+left or right. In \fBboolean\fR mode these keys are used for keyboard
+traversal, i.e. the Left key moves the focus to the previous widget in
+focus order, the Right key to the next widget.
+.IP [3]
+The return key moves the input focus to the next widget in focus order.
+.IP [4]
+The Home key moves the insertion cursor to the
+beginning of the entry. In \fBboolean\fR mode this key is ignored.
+.IP [5]
+The End key moves the insertion cursor to the
+end of the entry. In \fBboolean\fR mode this key is ignored.
+.IP [6]
+The Delete key deletes the character to the right of the insertion cursor.
+In \fBboolean\fR mode this key is ignored.
+.IP [7]
+The BackSpace key and Control-h delete the character to the left of
+the insertion cursor. In \fBboolean\fR mode this key is ignored.
+.IP [8]
+The space key deletes from the insertion cursor until the end of the entry,
+if the mode is \fBinteger\fR, \fBunsigned\fR, \fBfloat\fR or \fBregexp\fR.
+For \fBregexp\fR mode, the space character must not be part of the regular
+expression to achieve this behaviour. Otherwise it is treated as all other
+printable keys. In \fBboolean\fR mode this key toggles the entry's value.
+.IP [9]
+All other printable keys are checked according to the entry's mode.
+If allowed they overtype the character under the insertion cursor, otherwise
+they are ignored and the terminal's bell is rung.
+Lower case characters are automatically converted to upper case, if the
+regular expression filters denies lower case characters but allows upper
+case characters.
+.IP [10]
+FocusIn is bound to display the entry with the \fIreverse\fR attribute for
+monochrome screens or with swapped foreground and background colors on color
+screens; additionally, the insertion cursor is placed on the very first
+character in the entry.
+.IP [11]
+FocusOut is bound to restore the visual effects of FocusIn, i.e. on
+mononochrome screens, the \fIreverse\fR attribute is removed,
+on color screens, the foreground and background colors are restored to
+their original values. For \fBinteger\fR, \fBunsigned\fR, and \fIfloat\fR
+modes, the entry's value is finally checked using the \fBscan\fR Tcl command.
+If the value is legal it is restored into the entry as the return from the
+\fBscan\fR, thus giving the Tcl canonical form for the value, i.e. no leading
+zeros for integral values (which otherwise could be interpreted as octal
+numbers) and a decimal point with at least one fractional
+digit for floating point values (which otherwise could be interpreted as
+integral numbers). If the \fBscan\fR conversion fails, the value specified
+in the \fB\-default\fR option is stored into the entry.
+
+.SH KEYWORDS
+entry, input

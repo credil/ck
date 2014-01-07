@@ -1,0 +1,49 @@
+'\"
+'\" Copyright (c) 1992 The Regents of the University of California.
+'\" Copyright (c) 1994 Sun Microsystems, Inc.
+'\" Copyright (c) 1996-1999 Christian Werner
+'\"
+'\" See the file "license.terms" for information on usage and redistribution
+'\" of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+'\" 
+.so man.macros
+.TH tkwait n 8.0 Ck "Ck Built-In Commands"
+.BS
+'\" Note:  do not modify the .SH NAME line immediately below!
+.SH NAME
+tkwait \- Wait for variable to change or window to be destroyed
+.SH SYNOPSIS
+\fBtkwait variable \fIname\fR
+.br
+\fBtkwait visibility \fIname\fR
+.br
+\fBtkwait window \fIname\fR
+.BE
+
+.SH DESCRIPTION
+.PP
+The \fBtkwait\fR command waits for one of several things to happen,
+then it returns without taking any other actions.
+The return value is always an empty string.
+If the first argument is \fBvariable\fR (or any abbreviation of
+it) then the second argument is the name of a global variable and the
+command waits for that variable to be modified.
+If the first argument is \fBvisibility\fR (or any abbreviation
+of it) then the second argument is the name of a window and the
+\fBtkwait\fR command waits for a change in its
+visibility state. This form is typically used to wait for a newly-created
+window to appear on the screen before taking some action.
+At the time of this writing, visibility state changes are unreliable.
+Thus this form of the \fBtkwait\fR command is strongly discouraged.
+If the first argument is \fBwindow\fR (or any abbreviation
+of it) then the second argument is the name of a window and the
+\fBtkwait\fR command waits for that window to be destroyed.
+This form is typically used to wait for a user to finish interacting
+with a dialog box before using the result of that interaction.
+.PP
+While the \fBtkwait\fR command is waiting it processes events in
+the normal fashion, so the application will continue to respond
+to user interactions.
+
+.SH KEYWORDS
+variable, visibility, wait, window

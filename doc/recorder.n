@@ -1,0 +1,62 @@
+'\"
+'\" Copyright (c) 1996-1999 Christian Werner
+'\"
+'\" See the file "license.terms" for information on usage and redistribution
+'\" of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+'\" 
+.so man.macros
+.TH recorder n 8.0 Ck "Ck Built-In Commands"
+.BS
+'\" Note:  do not modify the .SH NAME line immediately below!
+.SH NAME
+recorder \- Simple event recorder/player
+.SH SYNOPSIS
+\fBrecorder replay \fIfileName\fR
+.br
+\fBrecorder start \fR?\fI\-withdelay\fR? \fIfileName\fR
+.br
+\fBrecorder stop\fR
+.BE
+
+.SH DESCRIPTION
+.PP
+This command provides a simple recorder/player for certain kinds
+of events. The \fBrecorder start\fR form arranges for recording
+events to the event log file \fIfileName\fR. If the \fI\-withdelay\fR
+switch is specified, the delays between events are also recorded.
+The event log file may be replayed using the \fBrecorder replay\fR
+command form. With \fBrecorder stop\fR all recording/playing
+activity is stopped and all event log files are closed.
+.PP
+Each event takes up one line in an event log file. Event types are the
+first word in angle brackets in the line. They are followed by parameters
+for the event:
+.TP
+\fB<ButtonPress> \fIwindow button x y rootX rooty\fR
+Mouse button \fBbutton\fR (1, 2, or 3) pressed in window \fIwindow\fR at
+window coordinate \fIx\fR, \fIy\fR. Root coordinates are in \fIrootX\fR,
+\fIrootY\fR.
+.TP
+\fB<ButtonRelease> \fIwindow button x y rootX rooty\fR
+Mouse button released, analogous to \fB<ButtonPress>\fR.
+.TP
+\fB<Delay> \fImilliseconds\fR
+Delay replay for \fImilliseconds\fR.
+.TP
+\fB<Key> \fIwindow keysym\fR
+Key pressed in \fIwindow\fR. \fIKeysym\fR is the symbolic name of the
+key, e.g. ``Linefeed'', ``Return'', ``Control-A'', or a hexadecimal
+key code like 0xc3.
+Note that hexadecimal key codes greater than 0x7f are not portable
+accross different systems.
+.PP
+Lines starting with a hash are treated as comments. All other lines
+whose first word does not start with an open angle bracket are
+evaluated as normal Tcl commands. As in Tcl source files, newline-backslash
+sequences are treated as continuation lines.
+.PP
+Errors occuring during replay are reported using the background error
+mechanism. Upon error, the replay event log file is closed.
+
+.SH KEYWORDS
+event, recorder

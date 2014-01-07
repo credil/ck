@@ -1,0 +1,131 @@
+'\"
+'\" Copyright (c) 1996-1999 Christian Werner
+'\"
+'\" See the file "license.terms" for information on usage and redistribution
+'\" of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+'\" 
+.so man.macros
+.TH curses n 8.0 Ck "Ck Built-In Commands"
+.BS
+'\" Note:  do not modify the .SH NAME line immediately below!
+.SH NAME
+curses \- Retrieve/modify curses based information
+.SH SYNOPSIS
+\fBcurses\fR \fIoption \fR?\fIarg arg ...\fR?
+.BE
+
+.SH DESCRIPTION
+.PP
+The \fBcurses\fR command is used to retrieve or modify information
+which is related to the \fBcurses(3)\fR library providing the
+input/output mechanisms used by Ck.
+It can take any of a number of different forms,
+depending on the \fIoption\fR argument.  The legal forms are:
+.TP
+\fBcurses barcode\fR \fIstartChar endChar ?timeout?\fR
+Enables or modifies barcode reader support with delivery of \fBBarCode\fR
+events. \fIStartChar\fR and \fIendChar\fR are the start and end characters
+which delimit the barcode data packet without being delivered to the
+application. They must be specified as decimal numbers.
+The optional \fItimeout\fR argument is the maximum time between reception
+of start and end characters in millisecond for receiving the data packet;
+the default value is 1000.
+.TP
+\fBcurses barcode\fR \fI?off?\fR
+If \fIoff\fR is present, barcode reader support is disabled. Otherwise,
+the current start/end characters and the timeout are returned as a list
+of three decimal numbers.
+.TP
+\fBcurses baudrate\fR
+Returns the baud rate of the terminal as decimal string.
+.TP
+\fBcurses encoding \fR\fI?ISO8859|IBM437?\fR
+Sets or returns the character encoding being or to be used for
+displaying text. This affects for example the output of
+the text widget for the character values 0x80..0x9f.
+.TP
+\fBcurses gchar \fR\fI?charName? ?value?\fR
+Sets or returns the mappings of ``Alternate Character Set'' characters
+used to display the arrows of scrollbars, the indicators for checkbuttons
+and radiobuttons etc. \fICharName\fR must be a valid name of an ACS
+character (see list below), and \fIvalue\fR must be an integer, i.e.
+the value of the \fBcurses(3)\fR character which shall be output for the
+ACS character. By default the \fBterminfo(5)\fR entry for the terminal
+provides these mappings and there's rarely a need to modify them.
+.sp 1
+.ta 3c
+.nf
+\fBCk name	description\fR
+ulcorner	upper left corner
+urcorner	upper right corner
+llcorner	lower left corner
+lrcorner	lower right corner
+rtee	tee pointing right
+ltee	tee pointing left
+btee	tee pointing up
+ttee	tee pointing down
+hline	horizontal line
+vline	vertical line
+plus	large plus or crossover
+s1	scan line #1
+s9	scan line #9
+diamond	diamond
+ckboard	checker board (stipple)
+degree	degree symbol
+plminus	plus/minus
+bullet	bullet
+larrow	arrow pointing left
+rarrow	arrow pointing right
+uarrow	arrow pointing up
+darrow	arrow pointing down
+board	board of squares
+lantern	lantern symbol
+block	solid square block
+.fi
+.TP
+\fBcurses haskey\fR \fI?keyName?\fR
+If \fIkeyName\fR is omitted this command returns a list of all valid
+symbolic names of keyboard keys.
+If \fIkeyName\fR is given, a boolean is returned indicating if the
+terminal can generate that key.
+.TP
+\fBcurses purgeinput\fR
+Removes all characters typed so far from the keyboard input queue. This
+command should be used with great caution, since \fBxterm(1)\fR
+mouse events and barcode events are reported through the keyboard
+input queue as a character stream which can be interrupted
+by this command.
+.TP
+\fBcurses refreshdelay \fR\fI?milliseconds?\fR
+Sets or returns a time value which is used to limit the number of
+\fBcurses(3)\fR screen updates. By default the delay is zero, which
+does not impose any limits. Setting the refresh delay to a positive
+number can be useful in environments where the terminal is connected
+via terminal servers or \fBrlogin(1)\fR sessions.
+.TP
+\fBcurses reversekludge \fR\fI?boolean?\fR
+Queries or modifies special code for treatment of the reverse video
+attribute in conjunction with colors. On some terminals (e.g. the
+infamous AT386 Interactive console), the reverse attribute overrides
+the colors in effect. If the special code is enabled, the reverse
+attribute is emulated by swapping the foreground and background colors.
+.TP
+\fBcurses screendump \fR\fIfileName\fR
+Dumps the current screen contents to the file \fIfileName\fR if the
+curses library supports the \fBscr_dmp(3)\fR function. Otherwise an
+error is reported. The screen dump file is per se not useful, since
+it contains some binary representation internal to curses. However,
+there may exist an external utility program which transforms the screen
+dump file to ASCII in order to print it on paper.
+.TP
+\fBcurses suspend\fR
+Takes appropriate actions for job control, such as saving \fBcurses(3)\fR
+terminal state, sending the stop signal to the process and restoring 
+the terminal state when the process is continued.
+
+.SH "SEE ALSO"
+curses(3)
+
+.SH KEYWORDS
+screen, terminal, curses
+

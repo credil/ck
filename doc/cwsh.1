@@ -1,0 +1,117 @@
+'\"
+'\" Copyright (c) 1991-1994 The Regents of the University of California.
+'\" Copyright (c) 1994-1995 Sun Microsystems, Inc.
+'\" Copyright (c) 1996-1999 Christian Werner
+'\"
+'\" See the file "license.terms" for information on usage and redistribution
+'\" of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+'\" 
+.so man.macros
+.TH cwsh 1 8.0 Ck "Ck Applications"
+.BS
+'\" Note:  do not modify the .SH NAME line immediately below!
+.SH NAME
+cwsh \- Simple curses windowing shell
+.SH SYNOPSIS
+\fBcwsh\fR ?\fIfileName arg arg ...\fR?
+.BE
+
+.SH DESCRIPTION
+.PP
+\fBCwsh\fR is a simple program consisting of the Tcl command
+language, the Ck toolkit, and a main program that eventually reads
+commands from a file.
+It creates a main window and then processes Tcl commands.
+If \fBcwsh\fR is invoked with no arguments,
+then it reads Tcl commands interactively from a command window.
+It will continue processing commands until all windows have been
+deleted or until the \fBexit\fR Tcl command is evaluated.
+If there exists a file \fB.cwshrc\fR in the home directory of
+the user, \fBcwsh\fR evaluates the file as a Tcl script
+just before presenting the command window.
+.PP
+If \fBcwsh\fR is invoked with an initial \fIfileName\fR argument, then 
+\fIfileName\fR is treated as the name of a script file.
+\fBCwsh\fR will evaluate the script in \fIfileName\fR (which
+presumably creates a user interface), then it will respond to events
+until all windows have been deleted. The command window will not
+be created.
+There is no automatic evaluation of \fB.cwshrc\fR in this
+case, but the script file can always \fBsource\fR it if desired.
+
+.SH "APPLICATION NAME AND CLASS"
+.PP
+The name of the application, which is used for processing the
+option data base is taken from \fIfileName\fR, if it is specified,
+or from the command name by which \fBcwsh\fR was invoked.
+If this name contains a ``/''
+character, then only the characters after the last slash are used
+as the application name.
+.PP
+The class of the application, which is used for purposes such as
+specifying options, is the same as its name except that the first letter is
+capitalized.
+
+.SH "VARIABLES"
+.PP
+\fBCwsh\fR sets the following Tcl variables:
+.TP 15
+\fBargc\fR
+Contains a count of the number of \fIarg\fR arguments (0 if none).
+.TP 15
+\fBargv\fR
+Contains a Tcl list whose elements are the \fIarg\fR arguments
+that follow \fIfileName\fR, in order, or an empty string
+if there are no such arguments.
+.TP 15
+\fBargv0\fR
+Contains \fIfileName\fR if it was specified.
+Otherwise, contains the name by which \fBcwsh\fR was invoked.
+.TP 15
+\fBtcl_interactive\fR
+Contains 1 if \fBcwsh\fR was started without \fIfileName\fR
+argument, 0 otherwise.
+
+.SH "SCRIPT FILES"
+.PP
+If you create a Tcl script in a file whose first line is
+.DS
+\fB#!/usr/local/bin/cwsh\fR
+.DE
+then you can invoke the script file directly from your shell if
+you mark it as executable.
+This assumes that \fBcwsh\fR has been installed in the default
+location in /usr/local/bin;  if it's installed somewhere else
+then you'll have to modify the above line to match.
+Many UNIX systems do not allow the \fB#!\fR line to exceed about
+30 characters in length, so be sure that the \fBcwsh\fR executable
+can be accessed with a short file name.
+.PP
+An even better approach is to start your script files with the
+following three lines:
+.DS
+\fB#!/bin/sh
+# the next line restarts using cwsh \e
+exec cwsh "$0" "$@"\fR
+.DE
+This approach has three advantages over the approach in the previous
+paragraph.  First, the location of the \fBcwsh\fR binary doesn't have
+to be hard-wired into the script:  it can be anywhere in your shell
+search path.  Second, it gets around the 30-character file name limit
+in the previous approach.
+Third, this approach will work even if \fBcwsh\fR is
+itself a shell script (this is done on some systems in order to
+handle multiple architectures or operating systems:  the \fBcwsh\fR
+script selects one of several binaries to run).  The three lines
+cause both \fBsh\fR and \fBcwsh\fR to process the script, but the
+\fBexec\fR is only executed by \fBsh\fR.
+\fBsh\fR processes the script first;  it treats the second
+line as a comment and executes the third line.
+The \fBexec\fR statement cause the shell to stop processing and
+instead to start up \fBcwsh\fR to reprocess the entire script.
+When \fBcwsh\fR starts up, it treats all three lines as comments,
+since the backslash at the end of the second line causes the third
+line to be treated as part of the comment on the second line.
+
+.SH KEYWORDS
+shell, toolkit

@@ -1,0 +1,27 @@
+'\"
+'\" Copyright (c) 1994 The Regents of the University of California.
+'\" Copyright (c) 1994-1995 Sun Microsystems, Inc.
+'\" Copyright (c) 1996-1999 Christian Werner
+'\"
+'\" See the file "license.terms" for information on usage and redistribution
+'\" of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+'\" 
+.so man.macros
+.TH bell n 8.0 Ck "Ck Built-In Commands"
+.BS
+'\" Note:  do not modify the .SH NAME line immediately below!
+.SH NAME
+bell \- Ring a terminal's bell
+.SH SYNOPSIS
+\fBbell\fR
+.BE
+
+.SH DESCRIPTION
+.PP
+This command rings the bell on the terminal if supported, otherwise the
+terminal's screen is flashed. An empty string is returned as result of
+this command. \fBBell\fR is carried out immediately, i.e. not deferred
+until the application becomes idle.
+
+.SH KEYWORDS
+beep, bell, ring

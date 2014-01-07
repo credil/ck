@@ -1,0 +1,144 @@
+'\"
+'\" Copyright (c) 1990-1994 The Regents of the University of California.
+'\" Copyright (c) 1994-1995 Sun Microsystems, Inc.
+'\" Copyright (c) 1996-1999 Christian Werner
+'\"
+'\" See the file "license.terms" for information on usage and redistribution
+'\" of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+'\" 
+.so man.macros
+.TH winfo n 8.0 Ck "Ck Built-In Commands"
+.BS
+'\" Note:  do not modify the .SH NAME line immediately below!
+.SH NAME
+winfo \- Return window-related information
+.SH SYNOPSIS
+\fBwinfo\fR \fIoption \fR?\fIarg arg ...\fR?
+.BE
+
+.SH DESCRIPTION
+.PP
+The \fBwinfo\fR command is used to retrieve information about windows
+managed by Ck.  It can take any of a number of different forms,
+depending on the \fIoption\fR argument.  The legal forms are:
+.TP
+\fBwinfo children \fIwindow\fR
+Returns a list containing the path names of all the children
+of \fIwindow\fR.  Top-level windows are returned as children
+of their logical parents.
+.TP
+\fBwinfo class \fIwindow\fR
+Returns the class name for \fIwindow\fR.
+.TP
+\fBwinfo containing \fIrootX rootY\fR
+Returns the path name for the window containing the point given
+by \fIrootX\fR and \fIrootY\fR.
+\fIRootX\fR and \fIrootY\fR are specified as cursor position
+in the coordinate system of the terminal.
+If no window in this application contains the point then an empty
+string is returned.
+In selecting the containing window, children are given higher priority
+than parents and among siblings the highest one in the stacking order is
+chosen.
+.TP
+\fBwinfo depth \fIwindow\fR
+Returns a decimal string giving the depth of \fIwindow\fR. 1 means the
+terminal's screen is monochrome. Any number higher than 1 means that
+the terminal supports colors.
+.TP
+\fBwinfo exists \fIwindow\fR
+Returns 1 if there exists a window named \fIwindow\fR, 0 if no such
+window exists.
+.TP
+\fBwinfo geometry \fIwindow\fR
+Returns the geometry for \fIwindow\fR, in the form
+\fIwidth\fBx\fIheight\fB+\fIx\fB+\fIy\fR.  All dimensions are
+in terminal coordinates.
+.TP
+\fBwinfo height \fIwindow\fR
+Returns a decimal string giving \fIwindow\fR's height in terminal lines.
+When a window is first created its height will be 1;  the
+height will eventually be changed by a geometry manager to fulfill
+the window's needs.
+If you need the true height immediately after creating a widget,
+invoke \fBupdate\fR to force the geometry manager to arrange it,
+or use \fBwinfo reqheight\fR to get the window's requested height
+instead of its actual height.
+.TP
+\fBwinfo ismapped \fIwindow\fR
+Returns \fB1\fR if \fIwindow\fR is currently mapped, \fB0\fR otherwise.
+.TP
+\fBwinfo manager \fIwindow\fR
+Returns the name of the geometry manager currently
+responsible for \fIwindow\fR, or an empty string if \fIwindow\fR
+isn't managed by any geometry manager.
+The name is usually the name of the Tcl command for the geometry
+manager, such as \fBpack\fR or \fBplace\fR.
+.TP
+\fBwinfo name \fIwindow\fR
+Returns \fIwindow\fR's name (i.e. its name within its parent, as opposed
+to its full path name).
+The command \fBwinfo name .\fR will return the name of the application.
+.TP
+\fBwinfo parent \fIwindow\fR
+Returns the path name of \fIwindow\fR's parent, or an empty string
+if \fIwindow\fR is the main window of the application.
+.TP
+\fBwinfo reqheight \fIwindow\fR
+Returns a decimal string giving \fIwindow\fR's requested height,
+in lines.  This is the value used by \fIwindow\fR's geometry
+manager to compute its geometry.
+.TP
+\fBwinfo reqwidth \fIwindow\fR
+Returns a decimal string giving \fIwindow\fR's requested width,
+in columns.  This is the value used by \fIwindow\fR's geometry
+manager to compute its geometry.
+.TP
+\fBwinfo rootx \fIwindow\fR
+Returns a decimal string giving the x-coordinate, in the root
+window of the screen, of the
+upper-left corner of \fIwindow\fR's border (or \fIwindow\fR if it
+has no border).
+.TP
+\fBwinfo rooty \fIwindow\fR
+Returns a decimal string giving the y-coordinate, in the root
+window of the screen, of the
+upper-left corner of \fIwindow\fR's border (or \fIwindow\fR if it
+has no border).
+.TP
+\fBwinfo screenheight \fIwindow\fR
+Returns a decimal string giving the height of \fIwindow\fR's terminal
+screen, in lines.
+.TP
+\fBwinfo screenwidth \fIwindow\fR
+Returns a decimal string giving the width of \fIwindow\fR's terminal screen,
+in columns.
+.TP
+\fBwinfo toplevel \fIwindow\fR
+Returns the path name of the top-level window containing \fIwindow\fR.
+.TP
+\fBwinfo width \fIwindow\fR
+Returns a decimal string giving \fIwindow\fR's width in columns.
+When a window is first created its width will be 1;  the
+width will eventually be changed by a geometry manager to fulfill
+the window's needs.
+If you need the true width immediately after creating a widget,
+invoke \fBupdate\fR to force the geometry manager to arrange it,
+or use \fBwinfo reqwidth\fR to get the window's requested width
+instead of its actual width.
+.TP
+\fBwinfo x \fIwindow\fR
+Returns a decimal string giving the x-coordinate, in \fIwindow\fR's
+parent, of the
+upper-left corner of \fIwindow\fR's border (or \fIwindow\fR if it
+has no border).
+.TP
+\fBwinfo y \fIwindow\fR
+Returns a decimal string giving the y-coordinate, in \fIwindow\fR's
+parent, of the
+upper-left corner of \fIwindow\fR's border (or \fIwindow\fR if it
+has no border).
+
+.SH KEYWORDS
+children, class, geometry, height, identifier, information,
+mapped, parent, path name, screen, terminal, width, window

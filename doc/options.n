@@ -1,0 +1,367 @@
+'\"
+'\" Copyright (c) 1990-1994 The Regents of the University of California.
+'\" Copyright (c) 1994-1995 Sun Microsystems, Inc.
+'\" Copyright (c) 1996-1999 Christian Werner
+'\"
+'\" See the file "license.terms" for information on usage and redistribution
+'\" of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+'\" 
+.so man.macros
+.TH options n 8.0 Ck "Ck Built-In Commands"
+.BS
+'\" Note:  do not modify the .SH NAME line immediately below!
+.SH NAME
+options \- Standard options supported by widgets
+.BE
+
+.SH DESCRIPTION
+This manual entry describes the common configuration options supported
+by widgets in the Ck toolkit.  Every widget does not necessarily support
+every option (see the manual entries for individual widgets for a list
+of the standard options supported by that widget), but if a widget does
+support an option with one of the names listed below, then the option
+has exactly the effect described below.
+.PP
+In the descriptions below,
+``Name'' refers to the option's name in the option database
+``Class'' refers to the option's class value
+in the option database.  ``Command-Line Switch'' refers to the
+switch used in widget-creation and \fBconfigure\fR widget commands to
+set this value.  For example, if an option's command-line switch is
+\fB\-foreground\fR and there exists a widget \fB.a.b.c\fR, then the
+command
+.DS
+\&\fB.a.b.c\0\0configure\0\0\-foreground black\fR
+.DE
+may be used to specify the value \fBblack\fR for the option in the
+the widget \fB.a.b.c\fR.  Command-line switches may be abbreviated,
+as long as the abbreviation is unambiguous.
+.ta 4c
+.LP
+.nf
+Name:	\fBactiveAttributes\fR
+Class:	\fBAttributes\fR
+Command-Line Switch:	\fB\-activeattributes\fR
+.fi
+.IP
+Specifies video attributes to use when drawing active elements of
+widgets. This option must be a proper Tcl list which may contain
+the elements:
+.PP
+.ta 4c 8c
+.nf
+	\fBblink\fR	\fBreverse\fR
+	\fBbold\fR	\fBstandout\fR
+	\fBdim\fR	\fBunderline\fR
+	\fBnormal\fR
+.fi
+.ta 4c
+.IP
+If the list is empty, the \fBnormal\fR attribute is automatically present.
+.LP
+.nf
+Name:	\fBactiveBackground\fR
+Class:	\fBForeground\fR
+Command-Line Switch:	\fB\-activebackground\fR
+.fi
+.IP
+Specifies background color to use when drawing active elements of
+widgets. Color specifications are always symbolic; valid color names are:
+.PP
+.ta 4c 8c
+.nf
+	\fBblack\fR	\fBmagenta\fR
+	\fBblue\fR	\fBred\fR
+	\fBcyan\fR	\fByellow\fR
+	\fBgreen\fR	\fBwhite\fR
+.fi
+.ta 4c
+.PP
+.LP
+.nf
+Name:	\fBactiveForeground\fR
+Class:	\fBBackground\fR
+Command-Line Switch:	\fB\-activeforeground\fR
+.fi
+.IP
+Specifies foreground color to use when drawing active elements.
+See above for possible colors.
+.LP
+.nf
+Name:	\fBanchor\fR
+Class:	\fBAnchor\fR
+Command-Line Switch:	\fB\-anchor\fR
+.fi
+.IP
+Specifies how the text in a widget is to be displayed in the widget.
+Must be one of the values \fBn\fR, \fBne\fR, \fBe\fR, \fBse\fR,
+\fBs\fR, \fBsw\fR, \fBw\fR, \fBnw\fR, or \fBcenter\fR.
+For example, \fBnw\fR means display the text such that its
+top-left corner is at the top-left corner of the widget.
+.LP
+.nf
+Name:	\fBattributes\fR
+Class:	\fBAttributes\fR
+Command-Line Switch:	\fB\-attributes\fR
+.fi
+.IP
+Specifies video attributes to use when displaying the widget.
+See \fBactiveAttributes\fR for possible values.
+.LP
+.nf
+Name:	\fBbackground\fR
+Class:	\fBBackground\fR
+Command-Line Switch:	\fB\-background or \-bg\fR
+.fi
+.IP
+Specifies the normal background color to use when displaying the
+widget. See \fBactiveBackground\fR for possible colors.
+.LP
+.nf
+Name:	\fBborder\fR
+Class:	\fBBorder\fR
+Command-Line Switch:	\fB\-border\fR
+.fi
+.IP
+Specifies the characters used for drawing a border around a widget.
+This options must be a proper Tcl list with exactly zero, one, three, six,
+or eight elements:
+.RS
+.TP 12
+0 elements
+No extra space for the border is allocated by the widget.
+.TP 12
+1 element
+All four sides of the border's rectangle plus the corners are made from
+the sole element.
+.TP 12
+3 elements
+The first element is used for the rectangle's corners, the second for
+the horizontal sides, and the third for the vertical sides.
+.TP 12
+6 elements
+The order of elements in the rectangle is: upper left corner, horizontal
+side, upper right corner, vertical side, lower right corner, lower left
+corner.
+.TP 12
+8 elements
+Each element gives corner and side, alternating, starting at the upper
+left corner of the square, clockwise.
+.RE
+.IP
+The list elements must be either a single character or a symbolic name
+of a graphical character. For valid names of graphical characters refer
+to the \fBcurses gchar\fR command.
+.LP
+.nf
+Name:	\fBdisabledAttributes\fR
+Class:	\fBDisabledAttributes\fR
+Command-Line Switch:	\fB\-disabledattributes\fR
+.fi
+.IP
+Specifies video attributes to use when drawing a disabled element.
+See \fBactiveAttributes\fR for possible values.
+.LP
+.nf
+Name:	\fBdisabledBackground\fR
+Class:	\fBDisabledBackground\fR
+Command-Line Switch:	\fB\-disabledbackground\fR
+.fi
+.IP
+Specifies background color to use when drawing a disabled element.
+See \fBactiveBackground\fR for possible colors.
+.LP
+.nf
+Name:	\fBdisabledForeground\fR
+Class:	\fBDisabledForeground\fR
+Command-Line Switch:	\fB\-disabledforeground\fR
+.fi
+.IP
+Specifies foreground color to use when drawing a disabled element.
+See \fBactiveBackground\fR for possible colors.
+.LP
+.nf
+Name:	\fBforeground\fR
+Class:	\fBForeground\fR
+Command-Line Switch:	\fB\-foreground or \-fg\fR
+.fi
+.IP
+Specifies the normal foreground color to use when displaying the widget.
+See \fBactiveBackground\fR for possible colors.
+.LP
+.nf
+Name:	\fBjustify\fR
+Class:	\fBJustify\fR
+Command-Line Switch:	\fB\-justify\fR
+.fi
+.IP
+When there are multiple lines of text displayed in a widget, this
+option determines how the lines line up with each other.
+Must be one of \fBleft\fR, \fBcenter\fR, or \fBright\fR.
+\fBLeft\fR means that the lines' left edges all line up, \fBcenter\fR
+means that the lines' centers are aligned, and \fBright\fR means
+that the lines' right edges line up.
+.LP
+.nf
+Name:	\fBorient\fR
+Class:	\fBOrient\fR
+Command-Line Switch:	\fB\-orient\fR
+.fi
+.IP
+For widgets that can lay themselves out with either a horizontal
+or vertical orientation, such as scrollbars, this option specifies
+which orientation should be used.  Must be either \fBhorizontal\fR
+or \fBvertical\fR or an abbreviation of one of these.
+.LP
+.nf
+Name:	\fBselectAttributes\fR
+Class:	\fBSelectAttributes\fR
+Command-Line Switch:	\fB\-selectattributes\fR
+.fi
+.IP
+Specifies video attributes to use when displaying selected items.
+See \fBactiveAttributes\fR for possible values.
+.LP
+.nf
+Name:	\fBselectBackground\fR
+Class:	\fBForeground\fR
+Command-Line Switch:	\fB\-selectbackground\fR
+.fi
+.IP
+Specifies the background color to use when displaying selected
+items. See \fBactiveBackground\fR for possible colors.
+.LP
+.nf
+Name:	\fBselectForeground\fR
+Class:	\fBBackground\fR
+Command-Line Switch:	\fB\-selectforeground\fR
+.fi
+.IP
+Specifies the foreground color to use when displaying selected
+items. See \fBactiveBackground\fR for possible colors.
+.LP
+.nf
+Name:	\fBtakeFocus\fR
+Class:	\fBTakeFocus\fR
+Command-Line Switch:	\fB\-takefocus\fR
+.fi
+.IP
+Provides information used when moving the focus from window to window
+via keyboard traversal (e.g., Tab and BackTab).
+Before setting the focus to a window, the traversal scripts first
+check whether the window is viewable (it and all its ancestors are mapped);
+if not, the window is skipped.
+Next, the scripts consult the value of the \fBtakeFocus\fR option.
+A value of \fB0\fR means that this window should be skipped entirely
+during keyboard traversal. 
+\fB1\fR means that the this window should always receive the input
+focus.
+An empty value means that the traversal scripts make the decision
+about whether or not to focus on the window:  the current
+algorithm is to skip the window if it is
+disabled or if it has no key bindings.
+If the value has any other form, then the traversal scripts take
+the value, append the name of the window to it (with a separator space),
+and evaluate the resulting string as a Tcl script.
+The script must return 0, 1, or an empty string;  this value is used
+just as if the option had that value in the first place.
+Note: this interpretation of the option is defined entirely by
+the Tcl scripts that implement traversal:  the widget implementations
+ignore the option entirely, so you can change its meaning if you
+redefine the keyboard traversal scripts.
+.LP
+.nf
+Name:	\fBtext\fR
+Class:	\fBText\fR
+Command-Line Switch:	\fB\-text\fR
+.fi
+.IP
+Specifies a string to be displayed inside the widget.  The way in which
+the string is displayed depends on the particular widget and may be
+determined by other options, such as \fBanchor\fR or \fBjustify\fR.
+.LP
+.nf
+Name:	\fBtextVariable\fR
+Class:	\fBVariable\fR
+Command-Line Switch:	\fB\-textvariable\fR
+.fi
+.IP
+Specifies the name of a variable.  The value of the variable is a text
+string to be displayed inside the widget;  if the variable value changes
+then the widget will automatically update itself to reflect the new value.
+The way in which the string is displayed in the widget depends on the
+particular widget and may be determined by other options, such as
+\fBanchor\fR or \fBjustify\fR.
+.LP
+.nf
+Name:	\fBunderline\fR
+Class:	\fBUnderline\fR
+Command-Line Switch:	\fB\-underline\fR
+.fi
+.IP
+Specifies the integer index of a character to underline in the widget.
+This option is used by the default bindings to implement keyboard
+traversal for menu buttons and menu entries.
+0 corresponds to the first character of the text displayed in the
+widget, 1 to the next character, and so on.
+.LP
+.nf
+Name:	\fBunderlineAttributes\fR
+Class:	\fBUnderlineAttributes\fR
+Command-Line Switch:	\fB\-underlineattributes\fR
+.fi
+.IP
+
+.LP
+.nf
+Name:	\fBunderlineForeground\fR
+Class:	\fBUnderlineForeground\fR
+Command-Line Switch:	\fB\-underlineforeground\fR
+.fi
+.IP
+Specifies the foreground color to use when displaying an underlined
+character. See \fBactiveBackground\fR for possible colors.
+.LP
+.nf
+Name:	\fBxScrollCommand\fR
+Class:	\fBScrollCommand\fR
+Command-Line Switch:	\fB\-xscrollcommand\fR
+.fi
+.IP
+Specifies the prefix for a command used to communicate with horizontal
+scrollbars.
+When the view in the widget's window changes (or
+whenever anything else occurs that could change the display in a
+scrollbar, such as a change in the total size of the widget's
+contents), the widget will
+generate a Tcl command by concatenating the scroll command and
+two numbers.
+Each of the numbers is a fraction between 0 and 1, which indicates
+a position in the document.  0 indicates the beginning of the document,
+1 indicates the end, .333 indicates a position one third the way through
+the document, and so on.
+The first fraction indicates the first information in the document
+that is visible in the window, and the second fraction indicates
+the information just after the last portion that is visible.
+The command is
+then passed to the Tcl interpreter for execution.  Typically the
+\fBxScrollCommand\fR option consists of the path name of a scrollbar
+widget followed by ``set'', e.g. ``.x.scrollbar set'':  this will cause
+the scrollbar to be updated whenever the view in the window changes.
+If this option is not specified, then no command will be executed.
+.LP
+.nf
+Name:	\fByScrollCommand\fR
+Class:	\fBScrollCommand\fR
+Command-Line Switch:	\fB\-yscrollcommand\fR
+.fi
+.IP
+Specifies the prefix for a command used to communicate with vertical
+scrollbars.  This option is treated in the same way as the
+\fBxScrollCommand\fR option, except that it is used for vertical
+scrollbars and is provided by widgets that support vertical scrolling.
+See the description of \fBxScrollCommand\fR for details
+on how this option is used.
+
+.SH KEYWORDS
+class, name, standard option, switch

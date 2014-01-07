@@ -1,0 +1,34 @@
+'\"
+'\" Copyright (c) 1993 The Regents of the University of California.
+'\" Copyright (c) 1994 Sun Microsystems, Inc.
+'\" Copyright (c) 1996-1999 Christian Werner
+'\"
+'\" See the file "license.terms" for information on usage and redistribution
+'\" of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+'\" 
+.so man.macros
+.TH exit n 8.0 Ck "Ck Built-In Commands"
+.BS
+'\" Note:  do not modify the .SH NAME line immediately below!
+.SH NAME
+exit \- Exit the process
+.SH SYNOPSIS
+\fBexit \fR?\fI\-noclear\fR? \fR?\fIreturnCode\fR?
+.BE
+
+.SH DESCRIPTION
+.PP
+Terminate the process, returning \fIreturnCode\fR (an integer) to the
+system as the exit status.
+If \fIreturnCode\fR isn't specified then it defaults
+to 0.
+This command replaces the Tcl command by the same name.
+It is identical to Tcl's \fBexit\fR command except that
+before exiting it destroys all the windows managed by
+the process.
+This allows various cleanup operations to be performed, such
+as restoring the terminal's state and clearing the terminal's screen.
+If the \fI\-noclear\fR switch is given, no screen clear takes place.
+
+.SH KEYWORDS
+exit, process

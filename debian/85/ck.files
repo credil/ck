@@ -1,0 +1,5 @@
+usr/bin
+usr/lib/ck8.5
+usr/lib/*.so
+usr/share/man/man1/*.1*
+usr/share/man/man3/*.3ck*

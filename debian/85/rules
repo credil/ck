@@ -1,0 +1,77 @@
+#!/usr/bin/make -f
+
+v = 8.5
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+	./configure --prefix=/usr --includedir=/usr/include/tcl$(v) \
+	    --with-tcl=/usr/lib/tcl$(v) \
+	    --enable-shared --disable-threads 
+	$(MAKE) CFLAGS="-g -O2 -D_REENTRANT"
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp install-stamp
+	-$(MAKE) clean
+	-$(MAKE) distclean
+	dh_clean
+
+install: install-stamp
+install-stamp: build-stamp
+	dh_testdir
+	dh_testroot
+	dh_installdirs
+	mkdir -p debian/tmp/usr
+	make INSTALL_ROOT=`pwd`/debian/tmp install-binaries install-libraries
+	# man pages
+	mkdir -p debian/tmp/usr/share/man/man1
+	mkdir -p debian/tmp/usr/share/man/man3
+	( cd doc ;\
+	  for i in *.n ; do \
+	    ii=`basename $$i .n` ;\
+	    soelim $$i > ../debian/tmp/usr/share/man/man3/$$ii.3ck ;\
+	    gzip -9 ../debian/tmp/usr/share/man/man3/$$ii.3ck ;\
+	  done )
+	( cd doc ;\
+	  for i in *.1 ; do \
+	    soelim $$i > ../debian/tmp/usr/share/man/man1/$$i ;\
+	    gzip -9 ../debian/tmp/usr/share/man/man1/$$i ;\
+	  done )
+	touch install-stamp
+
+# Build architecture-independent files here.
+binary-indep: build install
+	dh_testdir -i
+	dh_testroot -i
+	dh_movefiles -i
+	dh_installdocs -i
+	dh_compress -i
+	dh_fixperms -i
+	dh_installdeb -i
+	dh_gencontrol -i
+	dh_md5sums -i
+	dh_builddeb -i
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir -a
+	dh_testroot -a
+	dh_movefiles -a
+	dh_fixperms -a
+	dh_strip -a
+	dh_makeshlibs -a -V 'tcl$(v)'
+	dh_installdeb -a
+	dh_shlibdeps -a -ldebian/usr/lib/*.so
+	dh_gencontrol -a
+	dh_md5sums -a
+	dh_builddeb -a
+
+source diff:
+	@echo >&2 'source and diff are obsolete - use dpkg-source -b'; false
+
+#binary: binary-indep binary-arch
+binary: binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

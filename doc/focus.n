@@ -1,0 +1,47 @@
+'\"
+'\" Copyright (c) 1990-1994 The Regents of the University of California.
+'\" Copyright (c) 1994-1995 Sun Microsystems, Inc.
+'\" Copyright (c) 1996-1999 Christian Werner
+'\"
+'\" See the file "license.terms" for information on usage and redistribution
+'\" of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+'\" 
+.so man.macros
+.TH focus n 8.0 Ck "Ck Built-In Commands"
+.BS
+'\" Note:  do not modify the .SH NAME line immediately below!
+.SH NAME
+focus \- Manage the input focus
+.SH SYNOPSIS
+\fBfocus\fR
+.br
+\fBfocus \fIwindow\fR
+.BE
+
+.SH DESCRIPTION
+.PP
+The \fBfocus\fR command is used to manage the Ck input focus.
+At any given time, one window on the terminal's screen is designated as
+the \fIfocus window\fR;  any key press events are sent to that window.
+The Tcl procedures \fBck_focusNext\fR and \fBck_focusPrev\fR
+implement a focus order among the windows of a top-level;  they
+are used in the default bindings for Tab and Shift-Tab, among other
+things. Switching the focus among different top-levels is up
+to the user. 
+.PP
+The \fBfocus\fR command can take any of the following forms:
+.TP
+\fBfocus\fR
+Returns the path name of the focus window or an empty string if no window
+in the application has the focus.
+.TP
+\fBfocus \fIwindow\fR
+This command sets the input focus to \fIwindow\fR and returns an
+empty string. If \fIwindow\fR is in a different top-level than
+the current input focus window, then \fIwindow's\fR top-level
+is automatically raised just as if the \fBraise\fR Tcl command
+had been invoked.
+If \fIwindow\fR is an empty string then the command does nothing.
+
+.SH KEYWORDS
+events, focus, keyboard, top-level

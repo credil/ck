@@ -1,0 +1,271 @@
+'\"
+'\" Copyright (c) 1990 The Regents of the University of California.
+'\" Copyright (c) 1994 Sun Microsystems, Inc.
+'\" Copyright (c) 1996-1999 Christian Werner
+'\"
+'\" See the file "license.terms" for information on usage and redistribution
+'\" of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+'\" 
+.so man.macros
+.TH bind n 8.0 Ck "Ck Built-In Commands"
+.BS
+'\" Note:  do not modify the .SH NAME line immediately below!
+.SH NAME
+bind \- Arrange for events to invoke Tcl scripts
+.SH SYNOPSIS
+\fBbind\fI tag\fR
+.br
+\fBbind\fI tag sequence\fR
+.br
+\fBbind\fI tag sequence script\fR
+.br
+\fBbind\fI tag sequence \fB+\fIscript\fR
+.BE
+
+.SH INTRODUCTION
+.PP
+The \fBbind\fR command associates Tcl scripts with events.
+If all three arguments are specified, \fBbind\fR will
+arrange for \fIscript\fR (a Tcl script) to be evaluated whenever
+the event(s) given by \fIsequence\fR occur in the window(s)
+identified by \fItag\fR.
+If \fIscript\fR is prefixed with a ``+'', then it is appended to
+any existing binding for \fIsequence\fR;  otherwise \fIscript\fR replaces
+any existing binding.
+If \fIscript\fR is an empty string then the current binding for
+\fIsequence\fR is destroyed, leaving \fIsequence\fR unbound.
+In all of the cases where a \fIscript\fR argument is provided,
+\fBbind\fR returns an empty string.
+.PP
+If \fIsequence\fR is specified without a \fIscript\fR, then the
+script currently bound to \fIsequence\fR is returned, or
+an empty string is returned if there is no binding for \fIsequence\fR.
+If neither \fIsequence\fR nor \fIscript\fR is specified, then the
+return value is a list whose elements are all the sequences
+for which there exist bindings for \fItag\fR.
+.PP
+The \fItag\fR argument determines which window(s) the binding applies to.
+If \fItag\fR begins with a dot, as in \fB.a.b.c\fR, then it must
+be the path name for a window; otherwise it may be an arbitrary
+string.
+Each window has an associated list of tags, and a binding applies
+to a particular window if its tag is among those specified for
+the window.
+Although the \fBbindtags\fR command may be used to assign an
+arbitrary set of binding tags to a window, the default binding
+tags provide the following behavior:
+.IP
+If a tag is the name of an internal window the binding applies
+to that window.
+.IP
+If the tag is the name of a toplevel window the binding applies
+to the toplevel window and all its internal windows.
+.IP
+If the tag is the name of a class of widgets, such as \fBButton\fR,
+the binding applies to all widgets in that class;
+.IP
+If \fItag\fR has the value \fBall\fR,
+the binding applies to all windows in the application.
+
+.SH "EVENT PATTERNS"
+.PP
+The \fIsequence\fR argument specifies a sequence of one or more
+event patterns, with optional white space between the patterns.  Each
+event pattern may
+take either of two forms.  In the simplest case it is a single
+printing ASCII character, such as \fBa\fR or \fB[\fR.  The character
+may not be a space character or the character \fB<\fR.  This form of
+pattern matches a \fBKeyPress\fR event for the particular
+character.  The second form of pattern is longer but more general.
+It has the following syntax:
+.DS C
+\fB<\fItype-detail\fB>\fR
+.DE
+The entire event pattern is surrounded by angle brackets.
+Inside the angle brackets are an event
+type, and an extra piece of information (\fIdetail\fR) identifying
+a particular button or keysym. Any of the fields may be omitted,
+as long as at least one of \fItype\fR and \fIdetail\fR is present.
+The fields must be separated by white space or dashes.
+
+.SH "EVENT TYPES"
+.LP
+The \fItype\fR field may be any of the following list.
+Where two names appear together, they are synonyms.
+.DS C
+.ta 5c 10c
+\fB
+BarCode	Expose	Map
+ButtonPress, Button	FocusIn	Unmap
+ButtonRelease	FocusOut
+Destroy	KeyPress, Key, Control\fR
+.DE
+.LP
+The last part of a long event specification is \fIdetail\fR.  In the
+case of a \fBButtonPress\fR or \fBButtonRelease\fR event, it is the
+number of a button (1-5).  If a button number is given, then only an
+event on that particular button will match;  if no button number is
+given, then an event on any button will match.  Note:  giving a
+specific button number is different than specifying a button modifier;
+in the first case, it refers to a button being pressed or released,
+while in the second it refers to some other button that is already
+depressed when the matching event occurs.  If a button
+number is given then \fItype\fR may be omitted:  if will default
+to \fBButtonPress\fR.  For example, the specifier \fB<1>\fR
+is equivalent to \fB<ButtonPress-1>\fR.
+.LP
+If the event type is \fBKeyPress\fR, \fBKey\fR or \fBControl\fR, then
+\fIdetail\fR may be specified in the form of a keysym.  Keysyms
+are textual specifications for particular keys on the keyboard;
+they include all the alphanumeric ASCII characters (e.g. ``a'' is
+the keysym for the ASCII character ``a''), plus descriptions for
+non-alphanumeric characters (``comma'' is the keysym for the comma
+character), plus descriptions for some of the non-ASCII keys on the
+keyboard (e.g. ``F1'' is the keysym for the F1 function key, if it exists).
+The complete list of keysyms is not presented here;  it is
+available by invoking the \fBcurses haskey\fR Tcl command and may vary
+from system to system.
+If necessary, you can use the \fB%K\fR notation described below
+to print out the keysym name for a particular key.
+If a keysym \fIdetail\fR is given, then the
+\fItype\fR field may be omitted;  it will default to \fBKeyPress\fR.
+For example, \fB<KeyPress-comma>\fR is equivalent to
+\fB<comma>\fR.
+
+.SH "BINDING SCRIPTS AND SUBSTITUTIONS"
+.LP
+The \fIscript\fR argument to \fBbind\fR is a Tcl script,
+which will be executed whenever the given event sequence occurs.
+\fICommand\fR will be executed in the same interpreter that the
+\fBbind\fR command was executed in, and it will run at global
+level (only global variables will be accessible).
+If \fIscript\fR contains
+any \fB%\fR characters, then the script will not be
+executed directly.  Instead, a new script will be
+generated by replacing each \fB%\fR, and the character following
+it, with information from the current event.  The replacement
+depends on the character following the \fB%\fR, as defined in the
+list below.  Unless otherwise indicated, the
+replacement string is the decimal value of the given field from
+the current event.
+Some of the substitutions are only valid for
+certain types of events;  if they are used for other types of events
+the value substituted is undefined.
+.TP
+\fB%%\fR
+Replaced with a single percent.
+.TP
+\fB%b\fR
+The number of the button that was pressed or released.  Valid only
+for \fBButtonPress\fR and \fBButtonRelease\fR events.
+.TP
+\fB%k\fR
+The \fIkeycode\fR field from the event.  Valid only for \fBKeyPress\fR
+and \fBKeyRelease\fR events.
+.TP
+\fB%x\fR
+The \fIx\fR coordinate (window coordinate system)
+from \fBButtonPress\fR and \fBButtonRelease\fR events.
+.TP
+\fB%y\fR
+The \fIy\fR coordinate (window coordinate system)
+from \fBButtonPress\fR and \fBButtonRelease\fR events.
+.TP
+\fB%A\fR
+For \fBKeyPress\fR events, substitutes the ASCII character corresponding to
+the event, or the empty string if the event doesn't correspond to an ASCII
+character (e.g. the shift key was pressed).
+For \fBBarCode\fR events, substitutes the entire barcode data packet.
+.TP
+\fB%K\fR
+The keysym corresponding to the event, substituted as a textual
+string. Valid only for \fBKeyPress\fR events.
+.TP
+\fB%N\fR
+The keysym corresponding to the event, substituted as
+a decimal number. Valid only for \fBKeyPress\fR events.
+.TP
+\fB%W\fR
+The path name of the window to which the event was reported (the
+\fIwindow\fR field from the event).  Valid for all event types.
+.TP
+\fB%X\fR
+The \fIx\fR coordinate (screen coordinate system)
+from \fBButtonPress\fR and \fBButtonRelease\fR events.
+.TP
+\fB%Y\fR
+The \fIy\fR coordinate (screen coordinate system)
+from \fBButtonPress\fR and \fBButtonRelease\fR events.
+.LP
+The replacement string for a %-replacement is formatted as a proper
+Tcl list element.
+This means that it will be surrounded with braces
+if it contains spaces, or special characters such as \fB$\fR and
+\fB{\fR may be preceded by backslashes.
+This guarantees that the string will be passed through the Tcl
+parser when the binding script is evaluated.
+Most replacements are numbers or well-defined strings such
+as \fBcomma\fR;  for these replacements no special formatting
+is ever necessary.
+The most common case where reformatting occurs is for the \fB%A\fR
+substitution.  For example, if \fIscript\fR is
+.DS
+\fBinsert\0%A\fR
+.DE
+and the character typed is an open square bracket, then the script
+actually executed will be
+.DS
+\fBinsert\0\e[\fR
+.DE
+This will cause the \fBinsert\fR to receive the original replacement
+string (open square bracket) as its first argument.
+If the extra backslash hadn't been added, Tcl would not have been
+able to parse the script correctly.
+
+.SH MULTIPLE MATCHES
+.LP
+It is possible for several bindings to match a given event.
+If the bindings are associated with different \fItag\fR's,
+then each of the bindings will be executed, in order.
+By default, a class binding will be executed first, followed
+by a binding for the widget, a binding for its toplevel, and
+an \fBall\fR binding.
+The \fBbindtags\fR command may be used to change this order for
+a particular window or to associate additional binding tags with
+the window.
+.LP
+The \fBcontinue\fR and \fBbreak\fR commands may be used inside a
+binding script to control the processing of matching scripts.
+If \fBcontinue\fR is invoked, then the current binding script
+is terminated but Tk will continue processing binding scripts
+associated with other \fItag\fR's.
+If the \fBbreak\fR command is invoked within a binding script,
+then that script terminates and no other scripts will be invoked
+for the event.
+.LP
+If more than one binding matches a particular event and they
+have the same \fItag\fR, then the most specific binding
+is chosen and its script is evaluated.
+The following tests are applied, in order, to determine which of
+several matching sequences is more specific:
+(a) a longer sequence (in terms of number
+of events matched) is more specific than a shorter sequence;
+(b) an event pattern that specifies a specific button or key is more specific
+than one that doesn't.
+.LP
+If an event does not match any of the existing bindings, then the
+event is ignored.
+An unbound event is not considered to be an error.
+
+.SH ERRORS
+.LP
+If an error occurs in executing the script for a binding then the
+\fBtkerror\fR mechanism is used to report the error.
+The \fBtkerror\fR command will be executed at global level
+(outside the context of any Tcl procedure).
+
+.SH "SEE ALSO"
+tkerror
+
+.SH KEYWORDS
+event, binding

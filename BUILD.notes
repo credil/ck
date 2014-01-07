@@ -1,0 +1,17 @@
+On RPM based systems (tested on CentOS 5) using tcl8.4:
+
+  rpmbuild -ta ck8.0.tar.gz
+
+On Debian based systems (tested on Debian 4/5) using tcl8.4:
+
+  tar xzf ck8.0.tar.gz
+  cd ck8.0
+  fakeroot dpkg-buildpackage -tc -uc -sn
+
+On Debian based systems (tested on Debian 4/5) using tcl8.5:
+
+  tar xzf ck8.0.tar.gz
+  cd ck8.0
+  mv debian/85/* debian
+  fakeroot dpkg-buildpackage -tc -uc -sn
+

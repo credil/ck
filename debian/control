@@ -1,0 +1,15 @@
+Source: ck
+Section: libs
+Priority: optional
+Maintainer: C Werner <chw@ch-werner.de>
+Build-Depends: debhelper (>= 4), libncursesw5-dev, tcl8.4-dev (>= 8.4.2)
+Standards-Version: 3.6.1
+
+Package: ck
+Section: libs
+Priority: optional
+Architecture: any
+Depends: ${shlibs:Depends}
+Provides: cwsh
+Description: Ck toolkit for Tcl and ncurses
+

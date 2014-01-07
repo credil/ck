@@ -1,0 +1,8 @@
+*.o
+Makefile
+ckConfig.sh
+config.cache
+config.log
+config.status
+cwsh
+libck8.5.a

@@ -1,4 +1,4 @@
-/* 
+/*
  * ckUtil.c --
  *
  *	Miscellaneous utility functions.
@@ -118,7 +118,7 @@ static struct charEncoding EncodingTable[] = {
 	{ NORMAL, 1 }, { NORMAL, 1 }, { NORMAL, 1 }, { NORMAL, 1 },
 	{ NORMAL, 1 }, { NORMAL, 1 }, { NORMAL, 1 }, { NORMAL, 1 },
 	{ NORMAL, 1 }, { NORMAL, 1 }, { NORMAL, 1 },
-    
+
 	{ REPLACE, 4 },	/* 0x7f */
 
 	/* 0x80 .. 0x8f */
@@ -241,7 +241,7 @@ static struct charEncoding EncodingTable[] = {
 	{ NORMAL, 1 }, { NORMAL, 1 }, { NORMAL, 1 }, { NORMAL, 1 },
 	{ NORMAL, 1 }, { NORMAL, 1 }, { NORMAL, 1 }, { NORMAL, 1 },
 	{ NORMAL, 1 }, { NORMAL, 1 }, { NORMAL, 1 },
-    
+
 	{ REPLACE, 4 },	/* 0x7f */
 
 	/* 0x80 .. 0x8f */
@@ -549,7 +549,7 @@ MakeUCRepl(uch, buf)
  *	is filled in with the x-coordinate at which the first
  *	character that didn't fit would be drawn, if it were to
  *	be drawn.
- *	
+ *
  *
  * Side effects:
  *	None.
@@ -576,7 +576,7 @@ CkMeasureChars(mainPtr, source, maxChars, startX, maxX,
 				 * (just before a space character) if
 				 * possible.  CK_AT_LEAST_ONE means always
 				 * return a value of at least one, even
-				 * if the character doesn't fit. 
+				 * if the character doesn't fit.
 				 * CK_PARTIAL_OK means it's OK to display only
 				 * a part of the last character in the line.
 				 * CK_NEWLINES_NOT_SPECIAL means that newlines

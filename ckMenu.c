@@ -1,4 +1,4 @@
-/* 
+/*
  * ckMenu.c --
  *
  *	This module implements menus for the  toolkit.  The menus
@@ -419,7 +419,7 @@ Ck_MenuCmd(clientData, interp, argc, argv)
     CkWindow *mainPtr = (CkWindow *) clientData;
     CkWindow *new;
     register Menu *menuPtr;
- 
+
     if (argc < 2) {
 	Tcl_AppendResult(interp, "wrong # args: should be \"",
 		argv[0], " pathName ?options?\"", (char *) NULL);
@@ -1374,7 +1374,7 @@ DisplayMenu(clientData)
         dFg = mePtr->disabledFg < 0 ? menuPtr->disabledFg : mePtr->disabledFg;
         nAt = mePtr->normalAttr < 0 ? menuPtr->normalAttr : mePtr->normalAttr;
         aAt = mePtr->activeAttr < 0 ? menuPtr->activeAttr : mePtr->activeAttr;
-        dAt = mePtr->disabledAttr < 0 ? menuPtr->disabledAttr : 
+        dAt = mePtr->disabledAttr < 0 ? menuPtr->disabledAttr :
             mePtr->disabledAttr;
 
 	if (mePtr->state == ckActiveUid) {

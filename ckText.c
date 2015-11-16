@@ -1,4 +1,4 @@
-/* 
+/*
  * ckText.c --
  *
  *	This module provides a big chunk of the implementation of
@@ -1365,11 +1365,11 @@ TextSearchCmd(textPtr, interp, argc, argv)
 	if (matchChar >= 0) {
 #if CK_USE_UTF
 	    int numChars;
-	   
+
 	    numChars = Tcl_NumUtfChars(startOfLine + matchChar,
 		matchLength);
 #endif
-	    
+
 	    /*
 	     * The index information returned by the regular expression
 	     * parser only considers textual information:  it doesn't

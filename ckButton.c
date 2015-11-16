@@ -1,4 +1,4 @@
-/* 
+/*
  * ckButton.c --
  *
  *	This module implements a collection of button-like
@@ -161,10 +161,10 @@ static Ck_ConfigSpec configSpecs[] = {
 	DEF_BUTTON_ACTIVE_BG_MONO, Ck_Offset(Button, activeBg),
 	BUTTON_MASK|CHECK_BUTTON_MASK|RADIO_BUTTON_MASK|CK_CONFIG_MONO_ONLY},
     {CK_CONFIG_COLOR, "-activeforeground", "activeForeground", "Background",
-	DEF_BUTTON_ACTIVE_FG_COLOR, Ck_Offset(Button, activeFg), 
+	DEF_BUTTON_ACTIVE_FG_COLOR, Ck_Offset(Button, activeFg),
 	BUTTON_MASK|CHECK_BUTTON_MASK|RADIO_BUTTON_MASK|CK_CONFIG_COLOR_ONLY},
     {CK_CONFIG_COLOR, "-activeforeground", "activeForeground", "Background",
-	DEF_BUTTON_ACTIVE_FG_MONO, Ck_Offset(Button, activeFg), 
+	DEF_BUTTON_ACTIVE_FG_MONO, Ck_Offset(Button, activeFg),
 	BUTTON_MASK|CHECK_BUTTON_MASK|RADIO_BUTTON_MASK|CK_CONFIG_MONO_ONLY},
     {CK_CONFIG_ANCHOR, "-anchor", "anchor", "Anchor",
 	DEF_BUTTON_ANCHOR, Ck_Offset(Button, anchor), ALL_MASK},
@@ -688,12 +688,12 @@ ConfigureButton(interp, butPtr, argc, argv, flags)
      */
 
     if (butPtr->textVarName != NULL) {
-	Tcl_UntraceVar(interp, butPtr->textVarName, 
+	Tcl_UntraceVar(interp, butPtr->textVarName,
 		TCL_GLOBAL_ONLY|TCL_TRACE_WRITES|TCL_TRACE_UNSETS,
 		ButtonTextVarProc, (ClientData) butPtr);
     }
     if (butPtr->selVarName != NULL) {
-	Tcl_UntraceVar(interp, butPtr->selVarName, 
+	Tcl_UntraceVar(interp, butPtr->selVarName,
 		TCL_GLOBAL_ONLY|TCL_TRACE_WRITES|TCL_TRACE_UNSETS,
 		ButtonVarProc, (ClientData) butPtr);
     }

@@ -1,4 +1,4 @@
-/* 
+/*
  * ckListbox.c --
  *
  *	This module implements listbox widgets for the
@@ -604,7 +604,7 @@ ListboxWidgetCmd(clientData, interp, argc, argv)
 	} else if ((c == 'i') && (strncmp(argv[2], "includes", length) == 0)) {
 	    int i;
 	    Element *elPtr;
-    
+
 	    if (argc != 4) {
 		Tcl_AppendResult(interp, "wrong # args: should be \"",
 			argv[0], " selection includes index\"", (char *) NULL);

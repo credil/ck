@@ -1,4 +1,4 @@
-/* 
+/*
  * ckOption.c --
  *
  *	This module contains procedures to manage the option
@@ -142,7 +142,7 @@ typedef struct ElArray {
 #define NUM_STACKS 8
 static ElArray *stacks[NUM_STACKS];
 static CkWindow *cachedWindow = NULL;	/* Lowest-level window currently
-					 * loaded in stacks at present. 
+					 * loaded in stacks at present.
 					 * NULL means stacks have never
 					 * been used, or have been
 					 * invalidated because of a change
@@ -201,7 +201,7 @@ static ElArray *	ExtendArray _ANSI_ARGS_((ElArray *arrayPtr,
 			    Element *elPtr));
 static void		ExtendStacks _ANSI_ARGS_((ElArray *arrayPtr,
 			    int leaf));
-static ElArray *	NewArray _ANSI_ARGS_((int numEls));	
+static ElArray *	NewArray _ANSI_ARGS_((int numEls));
 static void		OptionInit _ANSI_ARGS_((CkMainInfo *mainPtr));
 static int		ParsePriority _ANSI_ARGS_((Tcl_Interp *interp,
 			    char *string));
@@ -782,7 +782,7 @@ AddFromString(interp, winPtr, string, priority)
 	    src++;
 	    lineNum++;
 	    continue;
-	} 
+	}
 	if (*src == '\0') {
 	    break;
 	}
@@ -1297,7 +1297,7 @@ OptionInit(mainPtr)
 	    stacks[i] = NewArray(10);
 	    levels[0].bases[i] = 0;
 	}
-    
+
 	defaultMatch.nameUid = NULL;
 	defaultMatch.child.valueUid = NULL;
 	defaultMatch.priority = -1;

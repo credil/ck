@@ -1,4 +1,4 @@
-/* 
+/*
  * ckPack.c --
  *
  *	This file contains code to implement the "packer"
@@ -404,7 +404,7 @@ ArrangePacking(clientData)
 				 * are to be re-layed out. */
 {
     register Packer *masterPtr = (Packer *) clientData;
-    register Packer *slavePtr;	
+    register Packer *slavePtr;
     int cavityX, cavityY, cavityWidth, cavityHeight;
 				/* These variables keep track of the
 				 * as-yet-unallocated space remaining in
@@ -435,7 +435,7 @@ ArrangePacking(clientData)
     /*
      * Abort any nested call to ArrangePacking for this window, since
      * we'll do everything necessary here, and set up so this call
-     * can be aborted if necessary.  
+     * can be aborted if necessary.
      */
 
     if (masterPtr->abortPtr != NULL) {
@@ -643,7 +643,7 @@ ArrangePacking(clientData)
 	    if (width != slavePtr->winPtr->width ||
 		height != slavePtr->winPtr->height)
 		    Ck_ResizeWindow(slavePtr->winPtr, width, height);
-	    if (x != slavePtr->winPtr->x || 
+	    if (x != slavePtr->winPtr->x ||
 	        y != slavePtr->winPtr->y)
 		Ck_MoveWindow(slavePtr->winPtr, x, y);
 	    /*
@@ -1231,13 +1231,13 @@ ConfigureSlaves(interp, winPtr, argc, argv)
 	    masterPtr = slavePtr->masterPtr;
 	    goto scheduleLayout;
 	}
-    
+
 	/*
 	 * If none of the "-before", or "-after" options has
 	 * been specified, arrange for the slave to go at the end of
 	 * the order for its parent.
 	 */
-    
+
 	if (!positionGiven) {
 	    masterPtr = GetPacker(slave->parentPtr);
 	    prevPtr = masterPtr->slavePtr;
@@ -1252,7 +1252,7 @@ ConfigureSlaves(interp, winPtr, argc, argv)
 	 * Make sure that the slave's parent is either the master or
 	 * an ancestor of the master.
 	 */
-    
+
 	parent = slave->parentPtr;
 	if (masterPtr->winPtr != slave->parentPtr) {
 	    Tcl_AppendResult(interp, "can't pack ", argv[j],

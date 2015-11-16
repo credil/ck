@@ -1,4 +1,4 @@
-/* 
+/*
  * ckRecorder.c --
  *
  *	This file provides a simple event recorder.
@@ -88,7 +88,7 @@ RecorderInput(clientData, eventPtr)
     if (type != CK_EV_KEYPRESS && type != CK_EV_BARCODE &&
     	type != CK_EV_MOUSE_UP && type != CK_EV_MOUSE_DOWN)
     	return 0;
-    	
+
 #if (TCL_MAJOR_VERSION == 7) && (TCL_MINOR_VERSION <= 4)
     gettimeofday(&now, (struct timezone *) NULL);
     if (recPtr->withDelay && recPtr->lastEvent.tv_sec != 0 &&
@@ -241,7 +241,7 @@ DStringGets(filePtr, dsPtr)
 	Tcl_DStringAppend(dsPtr, &buf, 1);
 	p = c;
     }
-    /* Not reached. */	
+    /* Not reached. */
 }
 #else
 static int
@@ -266,7 +266,7 @@ DStringGets(chan, dsPtr)
 	    return TCL_OK;
 	}
     }
-    /* Not reached. */	
+    /* Not reached. */
 }
 #endif
 

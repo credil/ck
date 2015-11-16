@@ -1,4 +1,4 @@
-/* 
+/*
  * ckScrollbar.c --
  *
  *	This module implements a scrollbar widgets for the
@@ -80,7 +80,7 @@ typedef struct {
 
 /*
  * Flag bits for scrollbars:
- * 
+ *
  * REDRAW_PENDING:		Non-zero means a DoWhenIdle handler
  *				has already been queued to redraw
  *				this window.

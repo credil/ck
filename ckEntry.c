@@ -1,4 +1,4 @@
-/* 
+/*
  * ckEntry.c --
  *
  *	This module implements entry widgets for the
@@ -717,7 +717,7 @@ ConfigureEntry(interp, entryPtr, argc, argv, flags)
      */
 
     if (entryPtr->textVarName != NULL) {
-	Tcl_UntraceVar(interp, entryPtr->textVarName, 
+	Tcl_UntraceVar(interp, entryPtr->textVarName,
 		TCL_GLOBAL_ONLY|TCL_TRACE_WRITES|TCL_TRACE_UNSETS,
 		EntryTextVarProc, (ClientData) entryPtr);
     }

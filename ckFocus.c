@@ -1,4 +1,4 @@
-/* 
+/*
  * ckFocus.c --
  *
  *	This file contains procedures that manage the input focus.

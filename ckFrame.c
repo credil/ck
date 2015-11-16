@@ -1,4 +1,4 @@
-/* 
+/*
  * ckFrame.c --
  *
  *	This module implements "frame" and "toplevel" widgets for the

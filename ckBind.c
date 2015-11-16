@@ -1,4 +1,4 @@
-/* 
+/*
  * ckBind.c --
  *
  *	This file provides procedures that associate Tcl commands
@@ -35,7 +35,7 @@
  * this), for a total of 20 events to cover the three button presses
  * and two intervening releases.  If you reduce EVENT_BUFFER_SIZE too
  * much, shift multi-clicks will be lost.
- * 
+ *
  */
 
 #define EVENT_BUFFER_SIZE 30
@@ -787,7 +787,7 @@ Ck_BindEvent(bindingTable, eventPtr, winPtr, numObjects, objectPtr)
          * character), else look for a binding for all keys
          * (detail of 0).
 	 */
-    
+
 	matchPtr = NULL;
 	key.object = *objectPtr;
 	key.type = ringPtr->type;
@@ -814,7 +814,7 @@ Ck_BindEvent(bindingTable, eventPtr, winPtr, numObjects, objectPtr)
 			(PatSeq *) Tcl_GetHashValue(hPtr));
 	    }
 	}
-    
+
 	if (matchPtr != NULL) {
 	    ExpandPercents(winPtr, matchPtr->command, eventPtr,
 		    (KeySym) detail, &scripts);
@@ -1612,7 +1612,7 @@ tifind:
 	if (hPtr != NULL)
 	    goto tifind;
     }
-#endif    
+#endif
 error:
     Tcl_AppendResult(interp, "invalid key symbol \"", name,
 	"\"", (char *) NULL);

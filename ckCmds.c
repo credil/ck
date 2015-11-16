@@ -1,4 +1,4 @@
-/* 
+/*
  * ckCmds.c --
  *
  *	This file contains a collection of Ck-related Tcl commands
@@ -822,7 +822,7 @@ CkBindEventProc(winPtr, eventPtr)
     } else {
 	objPtr[0] = (ClientData) winPtr->pathName;
 	objPtr[1] = (ClientData) winPtr->classUid;
-	for (topLevPtr = winPtr; topLevPtr != NULL && 
+	for (topLevPtr = winPtr; topLevPtr != NULL &&
 	     !(topLevPtr->flags & CK_TOPLEVEL);
 	     topLevPtr = topLevPtr->parentPtr) {
 	     /* Empty loop body. */
@@ -886,7 +886,7 @@ Ck_BindtagsCmd(clientData, interp, argc, argv)
 	if (winPtr->numTags == 0) {
 	    Tcl_AppendElement(interp, winPtr->pathName);
 	    Tcl_AppendElement(interp, winPtr->classUid);
-	    for (winPtr2 = winPtr; winPtr2 != NULL && 
+	    for (winPtr2 = winPtr; winPtr2 != NULL &&
 		 !(winPtr2->flags & CK_TOPLEVEL);
 		 winPtr2 = winPtr2->parentPtr) {
 		 /* Empty loop body. */
@@ -967,7 +967,7 @@ CkFreeBindingTags(winPtr)
 	     * Names starting with "." are malloced rather than Uids, so
 	     * they have to be freed.
 	     */
-    
+
 	    ckfree(p);
 	}
     }

@@ -1,4 +1,4 @@
-/* 
+/*
  * ckWindow.c --
  *
  *	This file provides basic window-manipulation procedures.
@@ -424,7 +424,7 @@ Ck_CreateMainWindow(interp, className)
      */
 
     winPtr = NewWindow(NULL);
-    
+
     /*
      * Create the CkMainInfo structure for this application, and set
      * up name-related information for the new window.
@@ -611,7 +611,7 @@ Ck_CreateMainWindow(interp, className)
 	    mainPtr->mouseData = (ClientData) fd;
 	    Tcl_CreateFileHandler(fd, TCL_READABLE,
 				  CkHandleGPMInput, (ClientData) mainPtr);
-#else	    
+#else
 #if (TCL_MAJOR_VERSION == 7) && (TCL_MINOR_VERSION <= 4)
 	    mainPtr->mouseData = (ClientData) fd;
 	    Tk_CreateFileHandler2(fd, CkHandleGPMInput, (ClientData) mainPtr);
@@ -636,7 +636,7 @@ Ck_CreateMainWindow(interp, className)
     InputSetup(&inputInfo);
 #else
 #if (TCL_MAJOR_VERSION >= 8)
-    Tcl_CreateFileHandler(0, 
+    Tcl_CreateFileHandler(0,
 	TCL_READABLE, CkHandleInput, (ClientData) mainPtr);
 #else
 #if (TCL_MAJOR_VERSION == 7) && (TCL_MINOR_VERSION <= 4)
@@ -1108,7 +1108,7 @@ Ck_DestroyWindow(winPtr)
 	    } else {
 		wclear(stdscr);
 		wrefresh(stdscr);
-	    } 
+	    }
 	    endwin();
 #if CK_USE_UTF
 	    if (mainPtr->isoEncoding != NULL) {

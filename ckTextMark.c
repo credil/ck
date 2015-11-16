@@ -1,4 +1,4 @@
-/* 
+/*
  * ckTextMark.c --
  *
  *	This file contains the procedure that implement marks for

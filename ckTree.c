@@ -1,4 +1,4 @@
-/* 
+/*
  * ckTree.c --
  *
  *	This module implements a tree widget.
@@ -1225,7 +1225,7 @@ DisplayTree(clientData)
 		    if (nextPtr == NULL) {
 		    	parentPtr = parentPtr->parent;
 		    }
-		}	        
+		}
 	    }
 	}
 	if (x < winPtr->width) {
@@ -1235,7 +1235,7 @@ DisplayTree(clientData)
 
 	if (nodePtr == treePtr->activeNode && (treePtr->flags & GOT_FOCUS)) {
 	    Ck_SetWindowAttr(winPtr, treePtr->activeFg, treePtr->activeBg,
-		treePtr->activeAttr | ((nodePtr->flags & SELECTED) ? 
+		treePtr->activeAttr | ((nodePtr->flags & SELECTED) ?
 		treePtr->selectAttr : 0));
 	    mustRestore = 1;
 	} else if (nodePtr->flags & SELECTED) {
@@ -1401,7 +1401,7 @@ RecomputeVisibleNodes(treePtr)
 	treePtr->flags |= UPDATE_V_SCROLLBAR;
     treePtr->topIndex = top;
     treePtr->visibleNodes = count;
-}    
+}
 
 /*
  *----------------------------------------------------------------------
@@ -1799,7 +1799,7 @@ NextNode(searchPtr)
 
     if (searchPtr->searchOver)
 	return NULL;
-    
+
     hPtr = Tcl_NextHashEntry(&searchPtr->search);
     if (hPtr == NULL) {
 	searchPtr->searchOver = 1;
@@ -2042,7 +2042,7 @@ FindNodes(interp, treePtr, argc, argv, newTag, cmdName, option)
 		break;
 	    if (nodePtr->parent == NULL)
 		nextPtr = nodePtr->next;
-	    if (nodePtr->firstChild != NULL && 
+	    if (nodePtr->firstChild != NULL &&
 	        (nodePtr->flags & SHOWCHILDREN)) {
 		nodePtr = nodePtr->firstChild;
 	    } else if (nodePtr->next != NULL)

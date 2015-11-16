@@ -1,4 +1,4 @@
-/* 
+/*
  * ckMessage.c --
  *
  *	This module implements a message widgets for the
@@ -393,7 +393,7 @@ ConfigureMessage(interp, msgPtr, argc, argv, flags)
      */
 
     if (msgPtr->textVarName != NULL) {
-	Tcl_UntraceVar(interp, msgPtr->textVarName, 
+	Tcl_UntraceVar(interp, msgPtr->textVarName,
 		TCL_GLOBAL_ONLY|TCL_TRACE_WRITES|TCL_TRACE_UNSETS,
 		MessageTextVarProc, (ClientData) msgPtr);
     }

@@ -1,4 +1,4 @@
-/* 
+/*
  * ckGrid.c --
  *
  *	Grid based geometry manager.
@@ -219,7 +219,7 @@ Ck_GridCmd(clientData, interp, argc, argv)
     }
     c = argv[1][0];
     length = strlen(argv[1]);
-  
+
     if ((c == 'b') && (strncmp(argv[1], "bbox", length) == 0)) {
 	CkWindow *master;
 	GridBag *masterPtr;
@@ -236,7 +236,7 @@ Ck_GridCmd(clientData, interp, argc, argv)
 		    " bbox <master> <column> <row>\"", (char *) NULL);
 	    return TCL_ERROR;
 	}
-        
+
 	master = Ck_NameToWindow(interp, argv[2], winPtr);
 	if (master == NULL) {
 	    return TCL_ERROR;
@@ -292,7 +292,7 @@ Ck_GridCmd(clientData, interp, argc, argv)
 	for (i=0; i<=row; i++) {
 	    int dy = 0;
 	    if (weight > MINWEIGHT) {
-		dy = (int)((((double)diff) * 
+		dy = (int)((((double)diff) *
 		     masterPtr->layoutCache->weightY[i]) / weight);
 	    }
 	    prevY = y;
@@ -310,7 +310,7 @@ Ck_GridCmd(clientData, interp, argc, argv)
 	CkWindow *slave;
 	GridBag *slavePtr;
 	int i;
-    
+
 	for (i = 2; i < argc; i++) {
 	    slave = Ck_NameToWindow(interp, argv[i], winPtr);
 	    if (slave == NULL) {
@@ -328,7 +328,7 @@ Ck_GridCmd(clientData, interp, argc, argv)
 	GridBag *slavePtr;
 	CkWindow *slave;
 	char buffer[64];
-    
+
 	if (argc != 3) {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"",
 		    argv[0], " info window\"", (char *) NULL);
@@ -343,7 +343,7 @@ Ck_GridCmd(clientData, interp, argc, argv)
 	    interp->result[0] = '\0';
 	    return TCL_OK;
 	}
-    
+
 #if 0
 	Tcl_AppendElement(interp, "-in");
 	Tcl_AppendElement(interp, slavePtr->masterPtr->winPtr->pathName);
@@ -367,7 +367,7 @@ Ck_GridCmd(clientData, interp, argc, argv)
 	CkWindow *master;
 	GridBag *masterPtr;
 	int propagate;
-    
+
 	if (argc > 4) {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"",
 		    argv[0], " propagate window ?boolean?\"",
@@ -388,12 +388,12 @@ Ck_GridCmd(clientData, interp, argc, argv)
 	}
 	if (propagate) {
 	    masterPtr->flags &= ~DONT_PROPAGATE;
-      
+
 	    /*
 	     * Re-arrange the master to allow new geometry information to
 	     * propagate upwards to the master\'s master.
 	     */
-      
+
 	    if (masterPtr->abortPtr != NULL) {
 		*masterPtr->abortPtr = 1;
 	    }
@@ -427,7 +427,7 @@ Ck_GridCmd(clientData, interp, argc, argv)
 	GridBag *masterPtr, *slavePtr;
 	int i, value;
 	int row = -1, column = -1;
- 
+
 	if (argc < 3 || argc%2 ==0) {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"",
 		    argv[0], " slaves window ?-option value...?\"",
@@ -488,7 +488,7 @@ Ck_GridCmd(clientData, interp, argc, argv)
      * grid rowconfigure <master> <index> -option
      * grid rowconfigure <master> <index> -option value -option value
      */
-   
+
     } else if (((c == 'c') &&
 	 (strncmp(argv[1], "columnconfigure", length) == 0)) ||
         ((c == 'r') && (strncmp(argv[1], "rowconfigure", length) == 0))) {
@@ -831,7 +831,7 @@ GetLayoutInfo(masterPtr, r)
 
     /*
      * Apply minimum row/column dimensions
-     */ 
+     */
     if (r->width < masterPtr->column.used) {
 	r->width = masterPtr->column.used;
     }
@@ -892,7 +892,7 @@ GetLayoutInfo(masterPtr, r)
 	    if (slavePtr->tempWidth == i) {
 		px = slavePtr->tempX + slavePtr->tempWidth; /* right column */
 
-		/* 
+		/*
 		 * Figure out if we should use this slave's weight.
 		 * If the weight is less than the total weight spanned by
 		 * the width of the cell, then discard the weight.
@@ -951,7 +951,7 @@ GetLayoutInfo(masterPtr, r)
 	    if (slavePtr->tempHeight == i) {
 		py = slavePtr->tempY + slavePtr->tempHeight; /* bottom row */
 
-		/* 
+		/*
 		 * Figure out if we should use this slave's weight.
 		 * If the weight is less than the total weight spanned by
 		 * the height of the cell, then discard the weight.
@@ -1120,7 +1120,7 @@ GetMinSize(masterPtr, info, minw, minh)
     int intBWidth;	/* Width of internal border in parent window,
 			 * if any. */
 
-    intBWidth = (masterPtr->winPtr->flags & CK_BORDER) ? 1 : 0; 
+    intBWidth = (masterPtr->winPtr->flags & CK_BORDER) ? 1 : 0;
 
     t = 0;
     for(i = 0; i < info->width; i++)
@@ -1159,7 +1159,7 @@ ArrangeGrid(clientData)
 				 * are to be re-layed out. */
 {
     GridBag *masterPtr = (GridBag *) clientData;
-    GridBag *slavePtr;	
+    GridBag *slavePtr;
     int abort;
     int i, x, y, width, height;
     int diffw, diffh;
@@ -1185,7 +1185,7 @@ ArrangeGrid(clientData)
     /*
      * Abort any nested call to ArrangeGrid for this window, since
      * we'll do everything necessary here, and set up so this call
-     * can be aborted if necessary.  
+     * can be aborted if necessary.
      */
 
     if (masterPtr->abortPtr != NULL) {
@@ -1669,7 +1669,7 @@ ConfigureSlaves(interp, winPtr, argc, argv)
 	/* adjust default widget location for non-widgets */
 	if (*argv[j] != '.') {
 	    switch (*argv[j]) {
-		case '^':	/* extend the widget in the previous row 
+		case '^':	/* extend the widget in the previous row
 				 * Since we don't know who the master is yet,
 				 * handle these in a separate pass at the end
 				 */
@@ -1719,7 +1719,7 @@ ConfigureSlaves(interp, winPtr, argc, argv)
 	 * programmer will want it to retain its old configuration information.
 	 * If the programmer doesn't want this behavior, then she can reset the
 	 * defaults for herself, but she will never have to worry about keeping
-	 * track of the old state. 
+	 * track of the old state.
 	 */
 
 	for (i = numWindows; i < argc; i+=2) {
@@ -1899,12 +1899,12 @@ ConfigureSlaves(interp, winPtr, argc, argv)
 	    masterPtr = slavePtr->masterPtr;
 	    goto scheduleLayout;
 	}
-    
+
 	/*
 	 * If the "-in" option has not been specified, arrange for the
 	 * slave to go at the end of the order for its parent.
 	 */
-    
+
 	if (!positionGiven) {
 	    masterPtr = GetGridBag(slave->parentPtr);
 	    prevPtr = masterPtr->slavePtr;
@@ -1919,7 +1919,7 @@ ConfigureSlaves(interp, winPtr, argc, argv)
 	 * Make sure that the slave's parent is either the master or
 	 * an ancestor of the master.
 	 */
-    
+
 	parent = slave->parentPtr;
 	for (ancestor = masterPtr->winPtr; ; ancestor = ancestor->parentPtr) {
 	    if (ancestor == parent) {
@@ -2016,7 +2016,7 @@ ConfigureSlaves(interp, winPtr, argc, argv)
 	    if (slavePtr->gridWidth == width
 		&& slavePtr->gridColumn == otherPtr->gridColumn +
 		   otherPtr->gridWidth
-		&& slavePtr->gridRow + slavePtr->gridHeight == 
+		&& slavePtr->gridRow + slavePtr->gridHeight ==
 		   otherPtr->gridRow) {
 		slavePtr->gridHeight++;
 		match++;
@@ -2088,4 +2088,4 @@ StringToSticky(string)
 	}
     }
     return sticky;
-}		
+}

@@ -1,4 +1,4 @@
-/* 
+/*
  * ckMenubutton.c --
  *
  *	This module implements button-like widgets that are used

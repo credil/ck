@@ -1,4 +1,4 @@
-/* 
+/*
  * ckTextTag.c --
  *
  *	This module implements the "tag" subcommand of the widget command
@@ -128,7 +128,7 @@ CkTextTagCmd(textPtr, interp, argc, argv)
 		index2 = index1;
 		CkTextIndexForwChars(&index2, 1, &index2);
 	    }
-    
+
 	    if (tagPtr->affectsDisplay) {
 		CkTextRedrawTag(textPtr, &index1, &index2, tagPtr, !addTag);
 	    } else {
@@ -136,17 +136,17 @@ CkTextTagCmd(textPtr, interp, argc, argv)
 		 * Still need to trigger enter/leave events on tags that
 		 * have changed.
 		 */
-    
+
 		CkTextEventuallyRepick(textPtr);
 	    }
 	    CkBTreeTag(&index1, &index2, tagPtr, addTag);
-    
+
 	    /*
 	     * If the tag is "sel" then grab the selection if we're supposed
 	     * to export it and don't already have it.  Also, invalidate
 	     * partially-completed selection retrievals.
 	     */
-    
+
 	    if (tagPtr == textPtr->selTagPtr) {
 		textPtr->abortSelections = 1;
 	    }
@@ -188,7 +188,7 @@ CkTextTagCmd(textPtr, interp, argc, argv)
 	    }
 	} else if (argc == 5) {
 	    char *command;
-    
+
 	    command = Ck_GetBinding(interp, textPtr->bindingTable,
 		    (ClientData) tagPtr, argv[4]);
 	    if (command == NULL) {
@@ -341,7 +341,7 @@ CkTextTagCmd(textPtr, interp, argc, argv)
 		Ck_DeleteAllBindings(textPtr->bindingTable,
 			(ClientData) tagPtr);
 	    }
-	
+
 	    /*
 	     * Update the tag priorities to reflect the deletion of this tag.
 	     */
@@ -471,7 +471,7 @@ CkTextTagCmd(textPtr, interp, argc, argv)
 	     * skip to the end of this tagged range.
 	     */
 
-	    for (segPtr = index1.linePtr->segPtr, offset = index1.charIndex; 
+	    for (segPtr = index1.linePtr->segPtr, offset = index1.charIndex;
 		    offset >= 0;
 		    offset -= segPtr->size, segPtr = segPtr->nextPtr) {
 		if ((offset == 0) && (segPtr->typePtr == &ckTextToggleOnType)

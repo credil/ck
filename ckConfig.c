@@ -1,4 +1,4 @@
-/* 
+/*
  * ckConfig.c --
  *
  *	This file contains the Ck_ConfigureWidget procedure.
@@ -172,7 +172,7 @@ Ck_ConfigureWidget(interp, winPtr, specs, argc, argv, widgRec, flags)
 		if (DoConfig(interp, winPtr, specPtr, value, 1, widgRec) !=
 			TCL_OK) {
 		    char msg[200];
-    
+
 		    sprintf(msg, "\n    (%s \"%.50s\" in widget \"%.50s\")",
 			    "database entry for",
 			    specPtr->dbName, winPtr->pathName);
@@ -186,7 +186,7 @@ Ck_ConfigureWidget(interp, winPtr, specs, argc, argv, widgRec, flags)
 		    if (DoConfig(interp, winPtr, specPtr, value, 1, widgRec) !=
 			    TCL_OK) {
 			char msg[200];
-	
+
 			sprintf(msg,
 				"\n    (%s \"%.50s\" in widget \"%.50s\")",
 				"default value for",
@@ -285,7 +285,7 @@ FindConfigSpec(interp, specs, argvName, needFlags, hateFlags)
 			argvName, "\"", (char *) NULL);
 		return (Ck_ConfigSpec *) NULL;
 	    }
-	    if ((specPtr->dbName == matchPtr->dbName) 
+	    if ((specPtr->dbName == matchPtr->dbName)
 		    && (specPtr->type != CK_CONFIG_SYNONYM)
 		    && ((specPtr->specFlags & needFlags) == needFlags)
 		    && !(specPtr->specFlags & hateFlags)) {
@@ -773,7 +773,7 @@ FormatConfigValue(interp, winPtr, specPtr, widgRec, buffer, freeProcPtr)
 		    specPtr->customPtr->clientData, winPtr, widgRec,
 		    specPtr->offset, freeProcPtr);
 	    break;
-	default: 
+	default:
 	    result = "?? unknown type ??";
     }
     return result;

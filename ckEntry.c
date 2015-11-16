@@ -13,6 +13,7 @@
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
+#include <stdio.h>
 #include "ckPort.h"
 #include "ck.h"
 #include "default.h"
@@ -301,7 +302,7 @@ Ck_EntryCmd(clientData, interp, argc, argv)
 	goto error;
     }
 
-    interp->result = entryPtr->winPtr->pathName;
+    Tcl_SetResult(interp, entryPtr->winPtr->pathName, TCL_VOLATILE);
     return TCL_OK;
 
     error:
@@ -338,6 +339,7 @@ EntryWidgetCmd(clientData, interp, argc, argv)
     int result = TCL_OK;
     size_t length;
     int c;
+    char resultbuf[TCL_RESULT_SIZE];
 
     if (argc < 2) {
 	Tcl_AppendResult(interp, "wrong # args: should be \"",
@@ -397,7 +399,7 @@ EntryWidgetCmd(clientData, interp, argc, argv)
 		    argv[0], " get\"", (char *) NULL);
 	    goto error;
 	}
-	interp->result = entryPtr->string;
+	Tcl_SetResult(interp,  entryPtr->string, TCL_VOLATILE);
     } else if ((c == 'i') && (strncmp(argv[1], "icursor", length) == 0)
 	    && (length >= 2)) {
 	if (argc != 3) {
@@ -423,7 +425,8 @@ EntryWidgetCmd(clientData, interp, argc, argv)
 	if (GetEntryIndex(interp, entryPtr, argv[2], &index) != TCL_OK) {
 	    goto error;
 	}
-	sprintf(interp->result, "%d", index);
+	snprintf(resultbuf, sizeof(resultbuf),  "%d", index);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else if ((c == 'i') && (strncmp(argv[1], "insert", length) == 0)
 	    && (length >= 3)) {
 	int index;
@@ -469,9 +472,9 @@ EntryWidgetCmd(clientData, interp, argc, argv)
 		goto error;
 	    }
 	    if (entryPtr->selectFirst == -1) {
-		interp->result = "0";
+                Tcl_SetResult(interp, "0", TCL_STATIC);
 	    } else {
-		interp->result = "1";
+                Tcl_SetResult(interp, "1", TCL_STATIC);
 	    }
 	    goto done;
 	}
@@ -549,8 +552,9 @@ EntryWidgetCmd(clientData, interp, argc, argv)
 
 	if (argc == 2) {
 	    EntryVisibleRange(entryPtr, &first, &last);
-	    sprintf(interp->result, "%g %g", first, last);
-	    goto done;
+	    snprintf(resultbuf, sizeof(resultbuf),  "%g %g", first, last);
+            Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
+            goto done;
 	} else if (argc == 3) {
 	    if (GetEntryIndex(interp, entryPtr, argv[2], &index) != TCL_OK) {
 		goto error;
@@ -1377,7 +1381,8 @@ GetEntryIndex(interp, entryPtr, string, indexPtr)
 	}
     } else if (string[0] == 's') {
 	if (entryPtr->selectFirst == -1) {
-	    interp->result = "selection isn't in entry";
+          Tcl_SetResult(interp, "selection isn't in entry",
+                        TCL_STATIC);
 	    return TCL_ERROR;
 	}
 	if (length < 5) {

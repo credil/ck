@@ -225,7 +225,7 @@ CkInitFrame(interp, winPtr, argc, argv)
 	Ck_DestroyWindow(framePtr->winPtr);
 	return TCL_ERROR;
     }
-    interp->result = framePtr->winPtr->pathName;
+    Tcl_SetResult(interp, framePtr->winPtr->pathName, TCL_VOLATILE);
     return TCL_OK;
 }
 

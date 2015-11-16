@@ -13,6 +13,7 @@
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
+#include <stdio.h>
 #include "ckPort.h"
 #include "ck.h"
 
@@ -528,7 +529,7 @@ Ck_OptionCmd(clientData, interp, argc, argv)
 	}
 	value = Ck_GetOption(winPtr2, argv[3], argv[4]);
 	if (value != NULL) {
-	    interp->result = value;
+            Tcl_SetResult(interp, value, TCL_VOLATILE);
 	}
 	return TCL_OK;
     } else if ((c == 'r') && (strncmp(argv[1], "readfile", length) == 0)) {
@@ -756,6 +757,7 @@ AddFromString(interp, winPtr, string, priority)
     register char *src, *dst;
     char *name, *value;
     int lineNum;
+    char resultbuf[TCL_RESULT_SIZE];
 
     src = string;
     lineNum = 1;
@@ -795,8 +797,9 @@ AddFromString(interp, winPtr, string, priority)
 	dst = name = src;
 	while (*src != ':') {
 	    if ((*src == '\0') || (*src == '\n')) {
-		sprintf(interp->result, "missing colon on line %d",
+		snprintf(resultbuf, sizeof(resultbuf),  "missing colon on line %d",
 			lineNum);
+                Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 		return TCL_ERROR;
 	    }
 	    if ((src[0] == '\\') && (src[1] == '\n')) {
@@ -828,7 +831,8 @@ AddFromString(interp, winPtr, string, priority)
 	    src++;
 	}
 	if (*src == '\0') {
-	    sprintf(interp->result, "missing value on line %d", lineNum);
+	    snprintf(resultbuf, sizeof(resultbuf),  "missing value on line %d", lineNum);
+            Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 	    return TCL_ERROR;
 	}
 
@@ -840,8 +844,9 @@ AddFromString(interp, winPtr, string, priority)
 	dst = value = src;
 	while (*src != '\n') {
 	    if (*src == '\0') {
-		sprintf(interp->result, "missing newline on line %d",
+		snprintf(resultbuf, sizeof(resultbuf),  "missing newline on line %d",
 			lineNum);
+                Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 		return TCL_ERROR;
 	    }
 	    if ((src[0] == '\\') && (src[1] == '\n')) {

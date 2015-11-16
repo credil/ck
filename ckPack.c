@@ -257,9 +257,9 @@ Ck_PackCmd(clientData, interp, argc, argv)
 	masterPtr = GetPacker(master);
 	if (argc == 3) {
 	    if (masterPtr->flags & DONT_PROPAGATE) {
-		interp->result = "0";
+                Tcl_SetResult(interp, "0", TCL_STATIC);
 	    } else {
-		interp->result = "1";
+                Tcl_SetResult(interp, "1", TCL_STATIC);
 	    }
 	    return TCL_OK;
 	}

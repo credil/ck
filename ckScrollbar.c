@@ -14,6 +14,7 @@
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
+#include <stdio.h>
 #include "ckPort.h"
 #include "ck.h"
 #include "default.h"
@@ -260,7 +261,7 @@ Ck_ScrollbarCmd(clientData, interp, argc, argv)
 	goto error;
     }
 
-    interp->result = scrollPtr->winPtr->pathName;
+    Tcl_SetResult(interp, scrollPtr->winPtr->pathName, TCL_VOLATILE);
     return TCL_OK;
 
 error:
@@ -379,7 +380,10 @@ ScrollbarWidgetCmd(clientData, interp, argc, argv)
 	} else if (fraction > 1.0) {
 	    fraction = 1.0;
 	}
-	sprintf(interp->result, "%g", fraction);
+        { char resultbuf[TCL_RESULT_SIZE];
+          snprintf(resultbuf, sizeof(resultbuf), "%g", fraction);
+          Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
+        }
     } else if ((c == 'g') && (strncmp(argv[1], "get", length) == 0)) {
 	char first[TCL_DOUBLE_SPACE], last[TCL_DOUBLE_SPACE];
 	if (argc != 2) {
@@ -392,6 +396,7 @@ ScrollbarWidgetCmd(clientData, interp, argc, argv)
 	Tcl_AppendResult(interp, first, " ", last, (char *) NULL);
     } else if ((c == 'i') && (strncmp(argv[1], "identify", length) == 0)) {
         int x, y, thing;
+        char *result = NULL;
 
         if (argc != 4) {
             Tcl_AppendResult(interp, "wrong # args: should be \"",
@@ -404,12 +409,13 @@ ScrollbarWidgetCmd(clientData, interp, argc, argv)
         }
         thing = ScrollbarPosition(scrollPtr, x, y);
         switch (thing) {
-	    case TOP_ARROW:     interp->result = "arrow1";      break;
-	    case TOP_GAP:       interp->result = "trough1";     break;
-	    case SLIDER:        interp->result = "slider";      break;
-	    case BOTTOM_GAP:    interp->result = "trough2";     break;
-	    case BOTTOM_ARROW:  interp->result = "arrow2";      break;
+	    case TOP_ARROW:     result = "arrow1";      break;
+	    case TOP_GAP:       result = "trough1";     break;
+	    case SLIDER:        result = "slider";      break;
+	    case BOTTOM_GAP:    result = "trough2";     break;
+	    case BOTTOM_ARROW:  result = "arrow2";      break;
         }
+        Tcl_SetResult(interp, result, TCL_STATIC);
     } else if ((c == 's') && (strncmp(argv[1], "set", length) == 0)) {
 	if (argc == 4) {
 	    double first, last;

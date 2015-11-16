@@ -12,6 +12,7 @@
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
+#include <stdio.h>
 #include "ckPort.h"
 #include "ck.h"
 
@@ -389,9 +390,11 @@ Ck_CursesCmd(clientData, interp, argc, argv)
 	int gc;
 
 	if (argc == 3) {
+            char resultbuf[64];
 	    if (Ck_GetGChar(interp, argv[2], &gchar) != TCL_OK)
 		return TCL_ERROR;
-	    sprintf(interp->result, "%ld", gchar);
+            snprintf(resultbuf, sizeof(resultbuf), "%ld", gchar);
+            Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 	} else if (argc == 4) {
 	    if (Tcl_GetInt(interp, argv[3], &gc) != TCL_OK)
 		return TCL_ERROR;
@@ -446,8 +449,9 @@ Ck_CursesCmd(clientData, interp, argc, argv)
 	int onoff;
 
 	if (argc == 2) {
-	    interp->result = (mainPtr->flags & CK_REVERSE_KLUDGE) ?
+            char *kludge = (mainPtr->flags & CK_REVERSE_KLUDGE) ?
 		"1" : "0";
+            Tcl_SetResult(interp, kludge, TCL_STATIC);
 	} else if (argc == 3) {
 	    if (Tcl_GetBoolean(interp, argv[2], &onoff) != TCL_OK)
 		return TCL_ERROR;
@@ -483,7 +487,7 @@ Ck_CursesCmd(clientData, interp, argc, argv)
 	}
 	return TCL_OK;
 #else
-	interp->result = "screen dump not supported by this curses";
+        Tcl_SetResult(interp, "screen dump not supported by this curses", TCL_STATIC);
 	return TCL_ERROR;
 #endif
     } else if ((c == 's') && (strncmp(argv[1], "suspend", length) == 0)) {
@@ -541,6 +545,7 @@ Ck_WinfoCmd(clientData, interp, argc, argv)
     int length;
     char c, *argName;
     CkWindow *winPtr;
+    char resultbuf[TCL_RESULT_SIZE];
 
 #define SETUP(name) \
     if (argc != 3) {\
@@ -580,93 +585,110 @@ Ck_WinfoCmd(clientData, interp, argc, argv)
 	}
 	winPtr = Ck_GetWindowXY(mainPtr->mainPtr, &x, &y, 0);
 	if (winPtr != NULL) {
-	    interp->result = winPtr->pathName;
+            Tcl_SetResult(interp, winPtr->pathName, TCL_VOLATILE);
 	}
     } else if ((c == 'd') && (strncmp(argv[1], "depth", length) == 0)) {
 	SETUP("depth");
-	interp->result = (winPtr->mainPtr->flags & CK_HAS_COLOR) ? "3" : "1";
+        Tcl_SetResult(interp,
+                      (winPtr->mainPtr->flags & CK_HAS_COLOR) ? "3" : "1",
+                      TCL_VOLATILE);
     } else if ((c == 'e') && (strncmp(argv[1], "exists", length) == 0)) {
 	if (argc != 3) {
 	    argName = "exists";
 	    goto wrongArgs;
 	}
 	if (Ck_NameToWindow(interp, argv[2], mainPtr) == NULL) {
-	    interp->result = "0";
+            Tcl_SetResult(interp, "0", TCL_VOLATILE);
 	} else {
-	    interp->result = "1";
+            Tcl_SetResult(interp, "1", TCL_VOLATILE);
 	}
     } else if ((c == 'g') && (strncmp(argv[1], "geometry", length) == 0)) {
 	SETUP("geometry");
-	sprintf(interp->result, "%dx%d+%d+%d", winPtr->width,
+	snprintf(resultbuf, sizeof(resultbuf), "%dx%d+%d+%d", winPtr->width,
 		winPtr->height, winPtr->x, winPtr->y);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else if ((c == 'h') && (strncmp(argv[1], "height", length) == 0)) {
 	SETUP("height");
-	sprintf(interp->result, "%d", winPtr->height);
+	snprintf(resultbuf, sizeof(resultbuf), "%d", winPtr->height);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else if ((c == 'i') && (strncmp(argv[1], "ismapped", length) == 0)
 	    && (length >= 2)) {
 	SETUP("ismapped");
-	interp->result = (winPtr->flags & CK_MAPPED) ? "1" : "0";
+        Tcl_SetResult(interp, (winPtr->flags & CK_MAPPED) ? "1" : "0",
+                      TCL_VOLATILE);
     } else if ((c == 'm') && (strncmp(argv[1], "manager", length) == 0)) {
 	SETUP("manager");
-	if (winPtr->geomMgrPtr != NULL)
-	    interp->result = winPtr->geomMgrPtr->name;
+	if (winPtr->geomMgrPtr != NULL) {
+          Tcl_SetResult(interp, winPtr->geomMgrPtr->name,
+                        TCL_VOLATILE);
+        }
     } else if ((c == 'n') && (strncmp(argv[1], "name", length) == 0)) {
 	SETUP("name");
-	interp->result = (char *) winPtr->nameUid;
+        Tcl_SetResult(interp, (char *) winPtr->nameUid, TCL_VOLATILE);
     } else if ((c == 'c') && (strncmp(argv[1], "class", length) == 0)) {
 	SETUP("class");
-	interp->result = (char *) winPtr->classUid;
+        Tcl_SetResult(interp, (char *) winPtr->classUid, TCL_VOLATILE);
     } else if ((c == 'p') && (strncmp(argv[1], "parent", length) == 0)) {
 	SETUP("parent");
-	if (winPtr->parentPtr != NULL)
-	    interp->result = winPtr->parentPtr->pathName;
+	if (winPtr->parentPtr != NULL) {
+            Tcl_SetResult(interp, winPtr->parentPtr->pathName, TCL_VOLATILE);
+        }
     } else if ((c == 'r') && (strncmp(argv[1], "reqheight", length) == 0)
 	    && (length >= 4)) {
 	SETUP("reqheight");
-	sprintf(interp->result, "%d", winPtr->reqHeight);
+	snprintf(resultbuf, sizeof(resultbuf), "%d", winPtr->reqHeight);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else if ((c == 'r') && (strncmp(argv[1], "reqwidth", length) == 0)
 	    && (length >= 4)) {
 	SETUP("reqwidth");
-	sprintf(interp->result, "%d", winPtr->reqWidth);
+	snprintf(resultbuf, sizeof(resultbuf), "%d", winPtr->reqWidth);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else if ((c == 'r') && (strncmp(argv[1], "rootx", length) == 0)
 	    && (length >= 4)) {
         int x;
 
 	SETUP("rootx");
         Ck_GetRootGeometry(winPtr, &x, NULL, NULL, NULL);
-	sprintf(interp->result, "%d", x);
+	snprintf(resultbuf, sizeof(resultbuf), "%d", x);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else if ((c == 'r') && (strncmp(argv[1], "rooty", length) == 0)
 	    && (length >= 4)) {
 	int y;
 
 	SETUP("rooty");
 	Ck_GetRootGeometry(winPtr, NULL, &y, NULL, NULL);
-	sprintf(interp->result, "%d", y);
+	snprintf(resultbuf, sizeof(resultbuf), "%d", y);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else if ((c == 's') && (strncmp(argv[1], "screenheight", length) == 0)
 	    && (length >= 7)) {
 	SETUP("screenheight");
-	sprintf(interp->result, "%d", winPtr->mainPtr->winPtr->height);
+	snprintf(resultbuf, sizeof(resultbuf), "%d", winPtr->mainPtr->winPtr->height);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else if ((c == 's') && (strncmp(argv[1], "screenwidth", length) == 0)
 	    && (length >= 7)) {
 	SETUP("screenwidth");
-	sprintf(interp->result, "%d", winPtr->mainPtr->winPtr->width);
+	snprintf(resultbuf, sizeof(resultbuf), "%d", winPtr->mainPtr->winPtr->width);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else if ((c == 't') && (strncmp(argv[1], "toplevel", length) == 0)) {
         SETUP("toplevel");
 	for (; winPtr != NULL; winPtr = winPtr->parentPtr) {
 	    if (winPtr->flags & CK_TOPLEVEL) {
-		interp->result = winPtr->pathName;
+                Tcl_SetResult(interp, winPtr->pathName, TCL_VOLATILE);
 		break;
 	    }
 	}
     } else if ((c == 'w') && (strncmp(argv[1], "width", length) == 0)) {
 	SETUP("width");
-	sprintf(interp->result, "%d", winPtr->width);
+	snprintf(resultbuf, sizeof(resultbuf), "%d", winPtr->width);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else if ((c == 'x') && (argv[1][1] == '\0')) {
 	SETUP("x");
-	sprintf(interp->result, "%d", winPtr->x);
+	snprintf(resultbuf, sizeof(resultbuf), "%d", winPtr->x);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else if ((c == 'y') && (argv[1][1] == '\0')) {
 	SETUP("y");
-	sprintf(interp->result, "%d", winPtr->y);
+	snprintf(resultbuf, sizeof(resultbuf), "%d", winPtr->y);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else {
 	Tcl_AppendResult(interp, "bad option \"", argv[1],
 		"\": must be children, class, containing, depth ",
@@ -753,7 +775,7 @@ Ck_BindCmd(clientData, interp, argc, argv)
 	    Tcl_ResetResult(interp);
 	    return TCL_OK;
 	}
-	interp->result = command;
+        Tcl_SetResult(interp, command, TCL_VOLATILE);
     } else {
 	Ck_GetAllBindings(interp, winPtr->mainPtr->bindingTable, object);
     }

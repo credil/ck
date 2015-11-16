@@ -128,9 +128,9 @@ CkTextMarkCmd(textPtr, interp, argc, argv)
 	markPtr = (CkTextSegment *) Tcl_GetHashValue(hPtr);
 	if (argc == 4) {
 	    if (markPtr->typePtr == &ckTextRightMarkType) {
-		interp->result = "right";
+              Tcl_SetResult(interp, "right", TCL_STATIC);
 	    } else {
-		interp->result = "left";
+              Tcl_SetResult(interp, "left",  TCL_STATIC);
 	    }
 	    return TCL_OK;
 	}

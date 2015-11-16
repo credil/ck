@@ -49,8 +49,9 @@ Ck_FocusCmd(clientData, interp, argc, argv)
 
     if (argc == 1) {
 	focusWinPtr = winPtr->mainPtr->focusPtr;
-	if (focusWinPtr != NULL)
-	    interp->result = focusWinPtr->pathName;
+	if (focusWinPtr != NULL) {
+          Tcl_SetResult(interp, focusWinPtr->pathName, TCL_VOLATILE);
+        }
 	return TCL_OK;
     }
 

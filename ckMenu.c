@@ -14,6 +14,7 @@
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
+#include <stdio.h>
 #include "ckPort.h"
 #include "ck.h"
 #include "default.h"
@@ -475,7 +476,7 @@ Ck_MenuCmd(clientData, interp, argc, argv)
 	goto error;
     }
 
-    interp->result = menuPtr->winPtr->pathName;
+    Tcl_SetResult(interp, menuPtr->winPtr->pathName, TCL_VOLATILE);
     return TCL_OK;
 
     error:
@@ -681,9 +682,11 @@ MenuWidgetCmd(clientData, interp, argc, argv)
 	    goto error;
 	}
 	if (index < 0) {
-	    interp->result = "none";
+          Tcl_SetResult(interp, "none", TCL_STATIC);
 	} else {
-	    sprintf(interp->result, "%d", index);
+          char resultbuf[12];
+          snprintf(resultbuf, sizeof(resultbuf), "%d", index);
+          Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 	}
     } else if ((c == 'i') && (strncmp(argv[1], "insert", length) == 0)
 	    && (length >= 3)) {
@@ -837,19 +840,19 @@ MenuWidgetCmd(clientData, interp, argc, argv)
 	mePtr = menuPtr->entries[index];
 	switch (mePtr->type) {
 	    case COMMAND_ENTRY:
-		interp->result = "command";
+                Tcl_SetResult(interp, "command", TCL_STATIC);
 		break;
 	    case SEPARATOR_ENTRY:
-		interp->result = "separator";
+                Tcl_SetResult(interp, "separator", TCL_STATIC);
 		break;
 	    case CHECK_BUTTON_ENTRY:
-		interp->result = "checkbutton";
+                Tcl_SetResult(interp, "checkbutton", TCL_STATIC);
 		break;
 	    case RADIO_BUTTON_ENTRY:
-		interp->result = "radiobutton";
+                Tcl_SetResult(interp, "radiobutton", TCL_STATIC);
 		break;
 	    case CASCADE_ENTRY:
-		interp->result = "cascade";
+                Tcl_SetResult(interp, "cascade", TCL_STATIC);
 		break;
 	}
     } else if ((c == 'u') && (strncmp(argv[1], "unpost", length) == 0)) {
@@ -874,10 +877,12 @@ MenuWidgetCmd(clientData, interp, argc, argv)
 	    goto error;
 	}
 	if (index < 0) {
-	    interp->result = "0";
+            Tcl_SetResult(interp, "0", TCL_STATIC);
 	} else {
-	    sprintf(interp->result, "%d", menuPtr->entries[index]->y);
-	}
+          char resultbuf[12];
+          snprintf(resultbuf, sizeof(resultbuf), "%d", menuPtr->entries[index]->y);
+          Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
+        }
     } else {
 	Tcl_AppendResult(interp, "bad option \"", argv[1],
 		"\": must be activate, add, cget, configure, delete, ",

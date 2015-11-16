@@ -194,7 +194,7 @@ CkTextTagCmd(textPtr, interp, argc, argv)
 	    if (command == NULL) {
 		return TCL_ERROR;
 	    }
-	    interp->result = command;
+	    Tcl_SetResult(interp, command, TCL_VOLATILE);
 	} else {
 	    Ck_GetAllBindings(interp, textPtr->bindingTable,
 		    (ClientData) tagPtr);

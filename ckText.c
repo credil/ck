@@ -15,6 +15,7 @@
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
+#include <stdio.h>
 #include "ckPort.h"
 #include "ck.h"
 #include "ckText.h"
@@ -236,7 +237,7 @@ Ck_TextCmd(clientData, interp, argc, argv)
 	Ck_DestroyWindow(textPtr->winPtr);
 	return TCL_ERROR;
     }
-    interp->result = textPtr->winPtr->pathName;
+    Tcl_SetResult(interp, textPtr->winPtr->pathName, TCL_VOLATILE);
 
     return TCL_OK;
 }
@@ -294,7 +295,10 @@ TextWidgetCmd(clientData, interp, argc, argv)
 	    goto done;
 	}
 	if (CkTextCharBbox(textPtr, &index1, &x, &y, &width, &height) == 0) {
-	    sprintf(interp->result, "%d %d %d %d", x, y, width, height);
+          char resultbuf[64];
+          snprintf(resultbuf, sizeof(resultbuf),
+                   "%d %d %d %d", x, y, width, height);
+          Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 	}
     } else if ((c == 'c') && (strncmp(argv[1], "cget", length) == 0)
 	    && (length >= 2)) {
@@ -352,7 +356,7 @@ TextWidgetCmd(clientData, interp, argc, argv)
 	} else {
 	    goto compareError;
 	}
-	interp->result = (value) ? "1" : "0";
+	Tcl_SetResult(interp, (value) ? "1" : "0", TCL_STATIC);
     } else if ((c == 'c') && (strncmp(argv[1], "configure", length) == 0)
 	    && (length >= 3)) {
 	if (argc == 2) {
@@ -374,7 +378,7 @@ TextWidgetCmd(clientData, interp, argc, argv)
 	    goto done;
 	}
 	if (argc == 2) {
-	    interp->result = (ckBTreeDebug) ? "1" : "0";
+          Tcl_SetResult(interp, (ckBTreeDebug) ? "1" : "0", TCL_STATIC);
 	} else {
 	    if (Tcl_GetBoolean(interp, argv[2], &ckBTreeDebug) != TCL_OK) {
 		result = TCL_ERROR;
@@ -410,8 +414,11 @@ TextWidgetCmd(clientData, interp, argc, argv)
 	}
 	if (CkTextDLineInfo(textPtr, &index1, &x, &y, &width, &height, &base)
 		== 0) {
-	    sprintf(interp->result, "%d %d %d %d %d", x, y, width,
-		    height, base);
+          char resultbuf[64];
+          snprintf(resultbuf, sizeof(resultbuf),
+                   "%d %d %d %d %d", x, y, width,
+                   height, base);
+          Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 	}
     } else if ((c == 'g') && (strncmp(argv[1], "get", length) == 0)) {
 	if ((argc != 3) && (argc != 4)) {
@@ -474,7 +481,7 @@ TextWidgetCmd(clientData, interp, argc, argv)
 	    result = TCL_ERROR;
 	    goto done;
 	}
-	CkTextPrintIndex(&index1, interp->result);
+	CkTextPrintIndex(&index1, Tcl_GetStringResult(interp));
     } else if ((c == 'i') && (strncmp(argv[1], "insert", length) == 0)
 	    && (length >= 3)) {
 	int i, j, numTags;
@@ -1124,7 +1131,7 @@ TextSearchCmd(textPtr, interp, argc, argv)
 	    backwards = 1;
 	} else if ((c == 'c') && (strncmp(argv[i], "-count", length) == 0)) {
 	    if (i >= (argc-1)) {
-		interp->result = "no value given for \"-count\" option";
+              Tcl_SetResult(interp, "no value given for \"-count\" option", TCL_STATIC);
 		return TCL_ERROR;
 	    }
 	    i++;
@@ -1423,7 +1430,7 @@ TextSearchCmd(textPtr, interp, argc, argv)
 		    goto done;
 		}
 	    }
-	    CkTextPrintIndex(&index, interp->result);
+	    CkTextPrintIndex(&index, Tcl_GetStringResult(interp));
 	    goto done;
 	}
 

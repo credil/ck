@@ -143,7 +143,7 @@ Ck_Main(argc, argv, appInitProc)
 	if (errChannel) {
 	    Tcl_Write(errChannel,
 		"application-specific initialization failed: ", -1);
-	    Tcl_Write(errChannel, interp->result, -1);
+	    Tcl_Write(errChannel, Tcl_GetStringResult(interp), -1);
 	    Tcl_Write(errChannel, "\n", 1);
 	}
 #endif
@@ -205,7 +205,7 @@ Ck_Main(argc, argv, appInitProc)
         if (fullName == NULL) {
             errChannel = Tcl_GetStdChannel(TCL_STDERR);
             if (errChannel) {
-                Tcl_Write(errChannel, interp->result, -1);
+                Tcl_Write(errChannel, Tcl_GetStringResult(interp), -1);
                 Tcl_Write(errChannel, "\n", 1);
             }
         } else {
@@ -220,7 +220,7 @@ Ck_Main(argc, argv, appInitProc)
                 if (Tcl_EvalFile(interp, fullName) != TCL_OK) {
                     errChannel = Tcl_GetStdChannel(TCL_STDERR);
                     if (errChannel) {
-                        Tcl_Write(errChannel, interp->result, -1);
+                        Tcl_Write(errChannel, Tcl_GetStringResult(interp), -1);
                         Tcl_Write(errChannel, "\n", 1);
                     }
                 }
@@ -262,7 +262,7 @@ mainLoop:
 error:
     msg = Tcl_GetVar(interp, "errorInfo", TCL_GLOBAL_ONLY);
     if (msg == NULL) {
-	msg = interp->result;
+        msg = Tcl_GetStringResult(interp);
     }
 errorExit:
     if (msg != NULL) {

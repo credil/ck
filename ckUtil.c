@@ -479,7 +479,7 @@ int
 Ck_GetEncoding(interp)
     Tcl_Interp *interp;
 {
-    interp->result = EncodingTable[Encoding].name;
+    Tcl_SetResult(interp, EncodingTable[Encoding].name, TCL_VOLATILE);
     return TCL_OK;
 }
 

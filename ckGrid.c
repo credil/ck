@@ -10,6 +10,7 @@
  *
  */
 
+#include <stdio.h>
 #include "ckPort.h"
 #include "ck.h"
 
@@ -208,7 +209,8 @@ Ck_GridCmd(clientData, interp, argc, argv)
     CkWindow *winPtr = (CkWindow *) clientData;
     size_t length;
     char c;
-  
+    char resultbuf[TCL_RESULT_SIZE];
+
     if ((argc >= 2) && (argv[1][0] == '.')) {
 	return ConfigureSlaves(interp, winPtr, argc-1, argv+1);
     }
@@ -258,12 +260,12 @@ Ck_GridCmd(clientData, interp, argc, argv)
 	GetCachedLayoutInfo(masterPtr);
 
 	if (row < 0 || column < 0) {
-	    *interp->result = '\0';
+            Tcl_ResetResult(interp);
 	    return TCL_OK;
 	}
 	if (column >= masterPtr->layoutCache->width ||
 		row >= masterPtr->layoutCache->height) {
-	    *interp->result = '\0';
+            Tcl_ResetResult(interp);
 	    return TCL_OK;
 	}
 	x = masterPtr->startx;
@@ -298,7 +300,8 @@ Ck_GridCmd(clientData, interp, argc, argv)
 	    prevY = y;
 	    y += masterPtr->layoutCache->minHeight[i] + dy;
 	}
-	sprintf(interp->result,"%d %d %d %d",prevX,prevY,x - prevX,y - prevY);
+	snprintf(resultbuf, sizeof(resultbuf), "%d %d %d %d",prevX,prevY,x - prevX,y - prevY);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else if ((c == 'c') && (strncmp(argv[1], "configure", length) == 0)) {
 	if (argv[2][0] != '.') {
 	    Tcl_AppendResult(interp, "bad argument \"", argv[2],
@@ -340,7 +343,7 @@ Ck_GridCmd(clientData, interp, argc, argv)
 	}
 	slavePtr = GetGridBag(slave);
 	if (slavePtr->masterPtr == NULL) {
-	    interp->result[0] = '\0';
+            Tcl_ResetResult(interp);
 	    return TCL_OK;
 	}
 
@@ -380,7 +383,7 @@ Ck_GridCmd(clientData, interp, argc, argv)
 	}
 	masterPtr = GetGridBag(master);
 	if (argc == 3) {
-	    interp->result = (masterPtr->flags & DONT_PROPAGATE) ? "0" : "1";
+            Tcl_SetResult(interp,(masterPtr->flags & DONT_PROPAGATE) ? "0" : "1", TCL_VOLATILE);
 	    return TCL_OK;
 	}
 	if (Tcl_GetBoolean(interp, argv[3], &propagate) != TCL_OK) {
@@ -420,8 +423,9 @@ Ck_GridCmd(clientData, interp, argc, argv)
 	masterPtr = GetGridBag(master);
 	GetCachedLayoutInfo(masterPtr);
 
-	sprintf(interp->result, "%d %d", masterPtr->layoutCache->width,
+	snprintf(resultbuf, sizeof(resultbuf), "%d %d", masterPtr->layoutCache->width,
 		masterPtr->layoutCache->height);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else if ((c == 's') && (strncmp(argv[1], "slaves", length) == 0)) {
 	CkWindow *master;
 	GridBag *masterPtr, *slavePtr;
@@ -551,7 +555,8 @@ Ck_GridCmd(clientData, interp, argc, argv)
 	    if (strncmp(argv[i], "-minsize", length) == 0) {
 		if (argc == 5) {
 		    size = con->used <= index ?  0 : con->minsize[index];
-		    sprintf(interp->result, "%d", size);
+		    snprintf(resultbuf, sizeof(resultbuf), "%d", size);
+                    Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 		} else if (Ck_GetCoord(interp, master, argv[i + 1], &size)
 			!= TCL_OK) {
 		    return TCL_ERROR;
@@ -570,7 +575,8 @@ Ck_GridCmd(clientData, interp, argc, argv)
 	    } else if (strncmp(argv[i], "-weight", length) == 0) {
 		if (argc == 5) {
 		    weight = con->used <= index ?  0 : con->weight[index];
-		    sprintf(interp->result, "%.2f", weight);
+		    snprintf(resultbuf, sizeof(resultbuf), "%.2f", weight);
+                    Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 		} else if (Tcl_GetDouble(interp, argv[i+1], &weight)
 		    != TCL_OK) {
 		    return TCL_ERROR;
@@ -683,7 +689,8 @@ Ck_GridCmd(clientData, interp, argc, argv)
 		}
 	    }
 	}
-	sprintf(interp->result, "%d %d", i, j);
+	snprintf(resultbuf, sizeof(resultbuf), "%d %d", i, j);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else {
 	Tcl_AppendResult(interp, "bad option \"", argv[1],
 		"\":  must be bbox, columnconfigure, configure, forget, ",

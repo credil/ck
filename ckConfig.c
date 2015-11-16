@@ -11,6 +11,7 @@
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
+#include <stdio.h>
 #include "ckPort.h"
 #include "ck.h"
 
@@ -448,8 +449,11 @@ DoConfig(interp, winPtr, specPtr, value, valueIsUid, widgRec)
 		}
 		break;
 	    default: {
-		sprintf(interp->result, "bad config table: unknown type %d",
-			specPtr->type);
+                char resultbuf[TCL_RESULT_SIZE];
+                snprintf(resultbuf, sizeof(resultbuf),
+                         "bad config table: unknown type %d",
+                         specPtr->type);
+                Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 		return TCL_ERROR;
 	    }
 	}
@@ -526,8 +530,8 @@ Ck_ConfigureInfo(interp, winPtr, specs, widgRec, argvName, flags)
 	if (specPtr == NULL) {
 	    return TCL_ERROR;
 	}
-	interp->result = FormatConfigInfo(interp, winPtr, specPtr, widgRec);
-	interp->freeProc = (Tcl_FreeProc *) free;
+        Tcl_SetResult(interp, FormatConfigInfo(interp, winPtr, specPtr, widgRec),
+                      (Tcl_FreeProc *) free);
 	return TCL_OK;
     }
 
@@ -589,6 +593,8 @@ Ck_ConfigureValue(interp, winPtr, specs, widgRec, argvName, flags)
 {
     Ck_ConfigSpec *specPtr;
     int needFlags, hateFlags;
+    char *value;
+    Tcl_FreeProc *freeProcPtr;
 
     needFlags = flags & ~(CK_CONFIG_USER_BIT - 1);
     if (winPtr->mainPtr->flags & CK_HAS_COLOR)
@@ -599,8 +605,11 @@ Ck_ConfigureValue(interp, winPtr, specs, widgRec, argvName, flags)
     if (specPtr == NULL) {
         return TCL_ERROR;
     }
-    interp->result = FormatConfigValue(interp, winPtr, specPtr, widgRec,
-            interp->result, &interp->freeProc);
+
+    value = FormatConfigValue(interp, winPtr, specPtr, widgRec,
+                              Tcl_GetStringResult(interp), &freeProcPtr);
+    Tcl_SetResult(interp, value, freeProcPtr);
+
     return TCL_OK;
 }
 

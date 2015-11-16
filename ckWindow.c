@@ -364,9 +364,10 @@ Ck_MainWindow(interp)
     				 * also used for error reporting. */
 {
     if (ckMainInfo == NULL || ckMainInfo->interp != interp) {
-	if (interp != NULL)
-	    interp->result = "no main window for application.";
-	return NULL;
+      if (interp != NULL) {
+        Tcl_SetResult(interp, "no main window for application.", TCL_STATIC);
+      }
+      return NULL;
     }
     return ckMainInfo->winPtr;
 }
@@ -2340,7 +2341,7 @@ DeadAppCmd(clientData, interp, argc, argv)
     int argc;
     char **argv;
 {
-    interp->result = "toolkit uninstalled";
+  Tcl_SetResult(interp, "toolkit uninstalled", TCL_STATIC);
     return TCL_ERROR;
 }
 

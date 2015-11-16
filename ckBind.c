@@ -12,6 +12,7 @@
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
+#include <stdio.h>
 #include "ckPort.h"
 #include "ck.h"
 
@@ -970,8 +971,10 @@ FindSequence(interp, bindPtr, object, eventString, create)
 		if (isprint((unsigned char) *p)) {
 		    patPtr->detail = *p;
 		} else {
-		    sprintf(interp->result,
+                  char resultbuf[64];
+                  snprintf(resultbuf, sizeof(resultbuf),
 			    "bad ASCII character 0x%x", (unsigned char) *p);
+                  Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 		    return NULL;
 		}
 	    }
@@ -1058,7 +1061,7 @@ badKeySym:
 		return NULL;
 	    }
 	} else if (patPtr->eventType == -1) {
-	    interp->result = "no event type or keysym";
+            Tcl_SetResult(interp, "no event type or keysym", TCL_STATIC);
 	    return NULL;
 	}
 	while ((*p == '-') || isspace((unsigned char) *p)) {
@@ -1066,7 +1069,7 @@ badKeySym:
 	}
 closeAngle:
 	if (*p != '>') {
-	    interp->result = "missing \">\" in binding";
+            Tcl_SetResult(interp, "missing \">\" in binding", TCL_STATIC);
 	    return NULL;
 	}
 	p++;
@@ -1081,7 +1084,7 @@ closeAngle:
      */
 
     if (numPats == 0) {
-	interp->result = "no events specified in binding";
+        Tcl_SetResult(interp, "no event type or keysym", TCL_STATIC);
 	return NULL;
     }
     patPtr = &pats[EVENT_BUFFER_SIZE-numPats];
@@ -1584,7 +1587,7 @@ CkTermHasKey(interp, name)
 	    goto error;
 	if (buf[0] < 'A' && buf[0] > 'z')
 	    goto error;
-	interp->result = "1";
+        Tcl_SetResult(interp, "1", TCL_STATIC);
 	return TCL_OK;
     }
 #ifdef __WIN32__
@@ -1597,14 +1600,14 @@ tifind:
 	tiname = ((KeySymInfo *) Tcl_GetHashValue(hPtr))->tiname;
 	if (tiname == NULL || ((tivalue = tigetstr(tiname)) != NULL &&
 	    tivalue != (char *) -1))
-	    interp->result = "1";
+            Tcl_SetResult(interp, "1", TCL_STATIC);
 	else
-	    interp->result = "0";
+            Tcl_SetResult(interp, "0", TCL_STATIC);
 	return TCL_OK;
     }
     if (strlen(name) == 1) {
 	if (name[0] > 0x01 && name[0] < ' ') {
-	    interp->result = "1";
+            Tcl_SetResult(interp, "1", TCL_STATIC);
 	    return TCL_OK;
 	}
 	hPtr = Tcl_FindHashEntry(&revKeySymTable, (char *)

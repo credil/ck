@@ -14,6 +14,7 @@
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
+#include <stdio.h>
 #include "ckPort.h"
 #include "ck.h"
 #include "default.h"
@@ -350,9 +351,10 @@ Ck_ButtonCmd(clientData, interp, argc, argv)
 	    type = TYPE_RADIO_BUTTON;
 	    break;
 	default:
-	    sprintf(interp->result,
-		    "unknown button-creation command \"%.50s\"", argv[0]);
-	    return TCL_ERROR;
+          Tcl_AppendResult(interp,
+                           "unknown button-creation command \"",
+                           argv[0], "\"");
+          return TCL_ERROR;
     }
 
     /*
@@ -412,7 +414,7 @@ Ck_ButtonCmd(clientData, interp, argc, argv)
 	return TCL_ERROR;
     }
 
-    interp->result = butPtr->winPtr->pathName;
+    Tcl_SetResult(interp, butPtr->winPtr->pathName, TCL_VOLATILE);
     return TCL_OK;
 }
 
@@ -445,11 +447,13 @@ ButtonWidgetCmd(clientData, interp, argc, argv)
     int result = TCL_OK;
     int length;
     char c;
+    char resultbuf[TCL_RESULT_SIZE];
 
     if (argc < 2) {
-	sprintf(interp->result,
+	snprintf(resultbuf, sizeof(resultbuf),
 		"wrong # args: should be \"%.50s option [arg arg ...]\"",
 		argv[0]);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 	return TCL_ERROR;
     }
     Ck_Preserve((ClientData) butPtr);
@@ -458,9 +462,10 @@ ButtonWidgetCmd(clientData, interp, argc, argv)
     if ((c == 'a') && (strncmp(argv[1], "activate", length) == 0)
 	    && (butPtr->type != TYPE_LABEL)) {
 	if (argc > 2) {
-	    sprintf(interp->result,
+	    snprintf(resultbuf, sizeof(resultbuf),
 		    "wrong # args: should be \"%.50s activate\"",
 		    argv[0]);
+            Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 	    goto error;
 	}
 	if (butPtr->state != ckDisabledUid) {
@@ -492,9 +497,10 @@ ButtonWidgetCmd(clientData, interp, argc, argv)
     } else if ((c == 'd') && (strncmp(argv[1], "deactivate", length) == 0)
 	    && (length > 2) && (butPtr->type != TYPE_LABEL)) {
 	if (argc > 2) {
-	    sprintf(interp->result,
+	    snprintf(resultbuf, sizeof(resultbuf),
 		    "wrong # args: should be \"%.50s deactivate\"",
 		    argv[0]);
+            Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 	    goto error;
 	}
 	if (butPtr->state != ckDisabledUid) {
@@ -504,9 +510,10 @@ ButtonWidgetCmd(clientData, interp, argc, argv)
     } else if ((c == 'd') && (strncmp(argv[1], "deselect", length) == 0)
 	    && (length > 2) && (butPtr->type >= TYPE_CHECK_BUTTON)) {
 	if (argc > 2) {
-	    sprintf(interp->result,
+	    snprintf(resultbuf, sizeof(resultbuf),
 		    "wrong # args: should be \"%.50s deselect\"",
 		    argv[0]);
+            Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 	    goto error;
 	}
 	if (butPtr->type == TYPE_CHECK_BUTTON) {
@@ -518,9 +525,10 @@ ButtonWidgetCmd(clientData, interp, argc, argv)
     } else if ((c == 'i') && (strncmp(argv[1], "invoke", length) == 0)
 	    && (butPtr->type > TYPE_LABEL)) {
 	if (argc > 2) {
-	    sprintf(interp->result,
+	    snprintf(resultbuf, sizeof(resultbuf),
 		    "wrong # args: should be \"%.50s invoke\"",
 		    argv[0]);
+            Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 	    goto error;
 	}
 	if (butPtr->state != ckDisabledUid) {
@@ -529,18 +537,20 @@ ButtonWidgetCmd(clientData, interp, argc, argv)
     } else if ((c == 's') && (strncmp(argv[1], "select", length) == 0)
 	    && (butPtr->type >= TYPE_CHECK_BUTTON)) {
 	if (argc > 2) {
-	    sprintf(interp->result,
+	    snprintf(resultbuf, sizeof(resultbuf),
 		    "wrong # args: should be \"%.50s select\"",
 		    argv[0]);
+            Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 	    goto error;
 	}
 	Tcl_SetVar(interp, butPtr->selVarName, butPtr->onValue, TCL_GLOBAL_ONLY);
     } else if ((c == 't') && (strncmp(argv[1], "toggle", length) == 0)
 	    && (length >= 2) && (butPtr->type == TYPE_CHECK_BUTTON)) {
 	if (argc > 2) {
-	    sprintf(interp->result,
+	    snprintf(resultbuf, sizeof(resultbuf),
 		    "wrong # args: should be \"%.50s select\"",
 		    argv[0]);
+            Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 	    goto error;
 	}
 	if (butPtr->flags & SELECTED) {
@@ -549,9 +559,10 @@ ButtonWidgetCmd(clientData, interp, argc, argv)
 	    Tcl_SetVar(interp, butPtr->selVarName, butPtr->onValue, TCL_GLOBAL_ONLY);
 	}
     } else {
-	sprintf(interp->result,
+	snprintf(resultbuf, sizeof(resultbuf),
 		"bad option \"%.50s\":  must be %s", argv[1],
 		optionStrings[butPtr->type]);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 	goto error;
     }
     Ck_Release((ClientData) butPtr);

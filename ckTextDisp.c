@@ -13,6 +13,7 @@
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
+#include <stdio.h>
 #include "ckPort.h"
 #include "ck.h"
 #include "ckText.h"
@@ -2733,8 +2734,11 @@ GetXView(interp, textPtr, report)
 	last = 1.0;
     }
     if (!report) {
-	sprintf(interp->result, "%g %g", first, last);
-	return;
+      char resultbuf[64];
+      snprintf(resultbuf, sizeof(resultbuf),
+               "%g %g", first, last);
+      Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
+      return;
     }
     if ((first == dInfoPtr->xScrollFirst) && (last == dInfoPtr->xScrollLast)) {
 	return;
@@ -2817,8 +2821,11 @@ GetYView(interp, textPtr, report)
 	    / (CkBTreeCharsInLine(dlPtr->index.linePtr));
     last /= totalLines;
     if (!report) {
-	sprintf(interp->result, "%g %g", first, last);
-	return;
+      char resultbuf[64];
+      snprintf(resultbuf, sizeof(resultbuf),
+               "%g %g", first, last);
+      Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
+      return;
     }
     if ((first == dInfoPtr->yScrollFirst) && (last == dInfoPtr->yScrollLast)) {
 	return;

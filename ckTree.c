@@ -9,6 +9,7 @@
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
+#include <stdio.h>
 #include "ckPort.h"
 #include "ck.h"
 #include "default.h"
@@ -423,7 +424,7 @@ Ck_TreeCmd(clientData, interp, argc, argv)
 	return TCL_ERROR;
     }
 
-    interp->result = treePtr->winPtr->pathName;
+    Tcl_SetResult(interp, treePtr->winPtr->pathName, TCL_VOLATILE);
     return TCL_OK;
 }
 
@@ -781,7 +782,7 @@ TreeWidgetCmd(clientData, interp, argc, argv)
 		redraw++;
 	    } while (nodePtr != NULL);
 	} else if ((c == 'i') && (strncmp(argv[2], "includes", length) == 0)) {
-	    interp->result = (nodePtr->flags & SELECTED) ? "1" : "0";
+          Tcl_SetResult(interp, (nodePtr->flags & SELECTED) ? "1" : "0", TCL_STATIC);
 	} else if ((c == 's') && (strncmp(argv[2], "set", length) == 0)) {
 	    do {
 		nodePtr->flags |= SELECTED;
@@ -817,9 +818,10 @@ TreeWidgetCmd(clientData, interp, argc, argv)
 
 	if (argc == 2) {
 	    if (treePtr->visibleNodes == 0) {
-		interp->result = "0 1";
+              Tcl_SetResult(interp, "0 1", TCL_STATIC);
 	    } else {
 		double fraction2;
+                char resultbuf[TCL_RESULT_SIZE];
 
 		fraction = treePtr->topIndex / (double) treePtr->visibleNodes;
 		fraction2 = (treePtr->topIndex + treePtr->winPtr->height) /
@@ -827,7 +829,8 @@ TreeWidgetCmd(clientData, interp, argc, argv)
 		if (fraction2 > 1.0) {
                     fraction2 = 1.0;
                 }
-                sprintf(interp->result, "%g %g", fraction, fraction2);
+                snprintf(resultbuf, sizeof(resultbuf),  "%g %g", fraction, fraction2);
+                Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 	    }
 	} else if (argc == 3) {
 	    Node *nodePtr;
@@ -2060,8 +2063,11 @@ FindNodes(interp, treePtr, argc, argv, newTag, cmdName, option)
 	    }
 	    count++;
 	}
-	if (nodePtr != NULL)
-	    sprintf(interp->result, "%ld", nodePtr->id);
+	if (nodePtr != NULL) {
+            char resultbuf[TCL_RESULT_SIZE];
+	    snprintf(resultbuf, sizeof(resultbuf),  "%ld", nodePtr->id);
+            Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
+        }
     } else if ((c == 'p') && (strncmp(argv[0], "prev", length) == 0)) {
     	int done = 0;
 	Node *parentPtr, *nextPtr;

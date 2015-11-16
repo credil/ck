@@ -633,7 +633,9 @@ startError:
 	string = "# CK-RECORDER\n# ";
 	Tcl_Write(recPtr->record, string, strlen(string));
 	Tcl_Eval(interp, "clock format [clock seconds]");
-	Tcl_Write(recPtr->record, interp->result, strlen(interp->result));
+        { char *result = Tcl_GetStringResult(interp);
+          Tcl_Write(recPtr->record, result, strlen(result));
+        }
 	Tcl_ResetResult(interp);
 	Tcl_Write(recPtr->record, "\n# ", 3);
 	string = Tcl_GetVar(interp, "argv0", TCL_GLOBAL_ONLY);

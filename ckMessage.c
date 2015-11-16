@@ -208,7 +208,7 @@ Ck_MessageCmd(clientData, interp, argc, argv)
 	goto error;
     }
 
-    interp->result = msgPtr->winPtr->pathName;
+    Tcl_SetResult(interp, msgPtr->winPtr->pathName, TCL_VOLATILE);
     return TCL_OK;
 
 error:

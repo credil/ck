@@ -13,6 +13,7 @@
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
+#include <stdio.h>
 #include "ckPort.h"
 #include "ck.h"
 #include "default.h"
@@ -340,7 +341,7 @@ Ck_ListboxCmd(clientData, interp, argc, argv)
 	goto error;
     }
 
-    interp->result = listPtr->winPtr->pathName;
+    Tcl_SetResult(interp, listPtr->winPtr->pathName, TCL_VOLATILE);
     return TCL_OK;
 
     error:
@@ -377,6 +378,7 @@ ListboxWidgetCmd(clientData, interp, argc, argv)
     int result = TCL_OK;
     size_t length;
     int c;
+    char resultbuf[TCL_RESULT_SIZE];
 
     if (argc < 2) {
 	Tcl_AppendResult(interp, "wrong # args: should be \"",
@@ -490,7 +492,7 @@ ListboxWidgetCmd(clientData, interp, argc, argv)
 	}
 	if (elPtr != NULL) {
 	    if (argc == 3) {
-		interp->result = elPtr->text;
+              Tcl_SetResult(interp, elPtr->text, TCL_VOLATILE);
 	    } else {
 		for (  ; i <= last; i++, elPtr = elPtr->nextPtr) {
 		    Tcl_AppendElement(interp, elPtr->text);
@@ -511,7 +513,8 @@ ListboxWidgetCmd(clientData, interp, argc, argv)
 		!= TCL_OK) {
 	    goto error;
 	}
-	sprintf(interp->result, "%d", index);
+	snprintf(resultbuf, sizeof(resultbuf),  "%d", index);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else if ((c == 'i') && (strncmp(argv[1], "insert", length) == 0)
 	    && (length >= 3)) {
 	int index;
@@ -539,7 +542,8 @@ ListboxWidgetCmd(clientData, interp, argc, argv)
 	    goto error;
 	}
 	index = NearestListboxElement(listPtr, y);
-	sprintf(interp->result, "%d", index);
+	snprintf(resultbuf, sizeof(resultbuf),  "%d", index);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else if ((c == 's') && (strncmp(argv[1], "see", length) == 0)
 	    && (length >= 3)) {
 	int index, diff;
@@ -615,9 +619,9 @@ ListboxWidgetCmd(clientData, interp, argc, argv)
 		/* Empty loop body. */
 	    }
 	    if ((elPtr != NULL) && (elPtr->selected)) {
-		interp->result = "1";
+                Tcl_SetResult(interp, "1", TCL_STATIC);
 	    } else {
-		interp->result = "0";
+                Tcl_SetResult(interp, "0", TCL_STATIC);
 	    }
 	} else if ((c == 's') && (strncmp(argv[2], "set", length) == 0)) {
 	    ListboxSelect(listPtr, first, last, 1);
@@ -634,7 +638,8 @@ ListboxWidgetCmd(clientData, interp, argc, argv)
 		    argv[0], " size\"", (char *) NULL);
 	    goto error;
 	}
-	sprintf(interp->result, "%d", listPtr->numElements);
+	snprintf(resultbuf, sizeof(resultbuf),  "%d", listPtr->numElements);
+        Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
     } else if ((c == 'x') && (strncmp(argv[1], "xview", length) == 0)) {
 	int index, count, type, windowWidth;
 	int offset = 0;		/* Initialized to stop gcc warnings. */
@@ -643,7 +648,7 @@ ListboxWidgetCmd(clientData, interp, argc, argv)
 	windowWidth = listPtr->winPtr->width;
 	if (argc == 2) {
 	    if (listPtr->maxWidth == 0) {
-		interp->result = "0 1";
+                Tcl_SetResult(interp, "0 1", TCL_STATIC);
 	    } else {
 		fraction = listPtr->xOffset/((double) listPtr->maxWidth);
 		fraction2 = (listPtr->xOffset + windowWidth)
@@ -651,7 +656,8 @@ ListboxWidgetCmd(clientData, interp, argc, argv)
 		if (fraction2 > 1.0) {
 		    fraction2 = 1.0;
 		}
-		sprintf(interp->result, "%g %g", fraction, fraction2);
+		snprintf(resultbuf, sizeof(resultbuf),  "%g %g", fraction, fraction2);
+                Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 	    }
 	} else if (argc == 3) {
 	    if (Tcl_GetInt(interp, argv[2], &index) != TCL_OK) {
@@ -681,7 +687,7 @@ ListboxWidgetCmd(clientData, interp, argc, argv)
 
 	if (argc == 2) {
 	    if (listPtr->numElements == 0) {
-		interp->result = "0 1";
+                Tcl_SetResult(interp, "0 1", TCL_STATIC);
 	    } else {
 		fraction = listPtr->topIndex/((double) listPtr->numElements);
 		fraction2 = (listPtr->topIndex+listPtr->fullLines)
@@ -689,7 +695,8 @@ ListboxWidgetCmd(clientData, interp, argc, argv)
 		if (fraction2 > 1.0) {
 		    fraction2 = 1.0;
 		}
-		sprintf(interp->result, "%g %g", fraction, fraction2);
+		snprintf(resultbuf, sizeof(resultbuf), "%g %g", fraction, fraction2);
+                Tcl_SetResult(interp, resultbuf, TCL_VOLATILE);
 	    }
 	} else if (argc == 3) {
 	    if (GetListboxIndex(interp, listPtr, argv[2], 0, &index)

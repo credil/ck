@@ -308,7 +308,7 @@ Ck_MenubuttonCmd(clientData, interp, argc, argv)
 	return TCL_ERROR;
     }
 
-    interp->result = mbPtr->winPtr->pathName;
+    Tcl_SetResult(interp, mbPtr->winPtr->pathName, TCL_VOLATILE);
     return TCL_OK;
 }
 

@@ -24,7 +24,11 @@
 
 #if (TCL_MAJOR_VERSION >= 8)
 #define CK_MAJOR_VERSION 8
-#if (TCL_MINOR_VERSION == 5)
+#if (TCL_MINOR_VERSION == 6)
+#define CK_VERSION "8.6"
+#define CK_MINOR_VERSION 6
+#define CK_USE_UTF 1
+#elif (TCL_MINOR_VERSION == 5)
 #define CK_VERSION "8.5"
 #define CK_MINOR_VERSION 5
 #define CK_USE_UTF 1

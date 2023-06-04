@@ -1,4 +1,4 @@
-/* 
+/*
  * ckAppInit.c --
  *
  *	Provides a default version of the Tcl_AppInit procedure for
@@ -14,15 +14,6 @@
 
 #include "ck.h"
 
-/*
- * The following variable is a special hack that is needed in order for
- * Sun shared libraries to be used for Tcl.
- */
-
-#ifndef __WIN32__
-extern int matherr();
-int *tclDummyMathPtr = (int *) matherr;
-#endif
 
 /*
  *----------------------------------------------------------------------
